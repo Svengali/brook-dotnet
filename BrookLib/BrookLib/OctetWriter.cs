@@ -23,62 +23,52 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
-using Piot.Brook;
+﻿
+using System;
 
-namespace Tests
+namespace Piot.Brook
 {
-	using Xunit;
-
-	public class InBitStreamTest
+	public class OctetWriter : IOctetWriter
 	{
-		static IInBitStream Setup(byte[] octets)
-		{
-			var octetReader = new OctetReader(octets);
-			var bitStream = new InBitStream(octetReader);
+		byte[] data;
+		int position;
 
-			return bitStream;
+		public OctetWriter(int size)
+		{
+			data = new byte[size];
 		}
 
-		[Fact]
-		public static void ReadNibble()
+		public void WriteOctet(byte v)
 		{
-			var bitStream = Setup(new byte[] {0x3c});
-
-			var t = bitStream.ReadBits(2);
-
-			Assert.Equal((uint)0, t);
-
-			var t2 = bitStream.ReadBits(1);
-			Assert.Equal((uint)1, t2);
-
-			var t3 = bitStream.ReadBits(1);
-			Assert.Equal((uint)1, t3);
+			data[position++] = v;
 		}
 
-		[Fact]
-		public static void ReadTooFar()
+		public byte[] Octets
 		{
-			var bitStream = Setup(new byte[] {0xfe});
-
-			var t = bitStream.ReadBits(4);
-
-			Assert.Equal((uint)15, t);
-
-			Assert.Throws<EndOfStreamException>(() => bitStream.ReadBits(5));
+			get
+			{
+				return data;
+			}
 		}
 
-		[Fact]
-		public static void ReadOverDWord()
+		public void WriteOctets(byte[] v)
 		{
-			var bitStream = Setup(new byte[] {0xca, 0xfe, 0xba, 0xdb, 0xee, 0xf0});
+			if (v.Length > RemainingOctetCount)
+			{
+				throw new Exception("written too far!");
+			}
+			var octetCount = v.Length;
 
-			var t = bitStream.ReadBits(24);
+			Array.Copy(v, 0, data, position, octetCount);
+			position += octetCount;
+		}
 
-			Assert.Equal((uint)(0xcafeba), t);
-
-			var t2 = bitStream.ReadBits(16);
-
-			Assert.Equal((uint)(0xdbee), t2);
+		public int RemainingOctetCount
+		{
+			get
+			{
+				return data.Length - position;
+			}
 		}
 	}
 }
