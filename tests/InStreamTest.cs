@@ -23,22 +23,62 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
-using System;
+using Piot.Brook;
 
-namespace Piot.Brook
+namespace Tests
 {
-	public interface IOutBitStream
+	using Xunit;
+
+	public class InBitStreamTest
 	{
-		void WriteUint16(ushort value);
+		static IInBitStream Setup(byte[] octets)
+		{
+			var octetReader = new OctetReader(octets);
+			var bitStream = new InBitStream(octetReader);
 
-		void WriteInt16(short value);
+			return bitStream;
+		}
 
-		void WriteUint32(uint value);
+		[Fact]
+		public static void ReadNibble()
+		{
+			var bitStream = Setup(new byte[] {0x3c});
 
-		void WriteUint8(byte value);
+			var t = bitStream.ReadBits(2);
 
-		void WriteBits(uint value, int count);
+			Assert.Equal((uint)0, t);
 
-		void WriteSignedBits(int value, int count);
+			var t2 = bitStream.ReadBits(1);
+			Assert.Equal((uint)1, t2);
+
+			var t3 = bitStream.ReadBits(1);
+			Assert.Equal((uint)1, t3);
+		}
+
+		[Fact]
+		public static void ReadTooFar()
+		{
+			var bitStream = Setup(new byte[] {0xfe});
+
+			var t = bitStream.ReadBits(4);
+
+			Assert.Equal((uint)15, t);
+
+			Assert.Throws<EndOfStreamException>(() => bitStream.ReadBits(5));
+		}
+
+		[Fact]
+		public static void ReadOverDWord()
+		{
+			var bitStream = Setup(new byte[] {0xca, 0xfe, 0xba, 0xdb, 0xee, 0xf0});
+
+			var t = bitStream.ReadBits(24);
+
+			Assert.Equal((uint)(0xcafeba), t);
+
+			var t2 = bitStream.ReadBits(16);
+
+			Assert.Equal((uint)(0xdbee), t2);
+		}
 	}
 }

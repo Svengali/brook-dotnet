@@ -31,10 +31,14 @@ namespace Piot.Brook
 	{
 		ushort ReadUint16();
 
+		short ReadInt16();
+
 		uint ReadUint32();
 
 		byte ReadUint8();
 
 		uint ReadBits(int count);
+
+		int ReadSignedBits(int count);
 	}
 }

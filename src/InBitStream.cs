@@ -43,6 +43,24 @@ namespace Piot.Brook
 			return (ushort) ReadBits(16);
 		}
 
+		public int ReadSignedBits(int count)
+		{
+			var sign = ReadBits(1);
+			var v = (int)ReadBits(count - 1);
+
+			if (sign != 0)
+			{
+				v = -v;
+			}
+
+			return v;
+		}
+
+		public short ReadInt16()
+		{
+			return (short)ReadSignedBits(16);
+		}
+
 		public uint ReadUint32()
 		{
 			return ReadBits(32);

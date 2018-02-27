@@ -43,6 +43,11 @@ namespace Piot.Brook
 			WriteBits(v, 16);
 		}
 
+		public void WriteInt16(short v)
+		{
+			WriteSignedBits(v, 16);
+		}
+
 		public void WriteUint32(uint v)
 		{
 			WriteBits(v, 32);
@@ -78,25 +83,52 @@ namespace Piot.Brook
 
 		void WriteRest(uint v, int count, int bitsToKeepFromLeft)
 		{
-			v >>= (count - bitsToKeepFromLeft);
-			v &= MaskFromCount(count);
-			v <<= remainingBits - bitsToKeepFromLeft;
+			var ov = v;
+
+			ov >>= (count - bitsToKeepFromLeft);
+			ov &= MaskFromCount(bitsToKeepFromLeft);
+			ov <<= remainingBits - bitsToKeepFromLeft;
 			remainingBits -= bitsToKeepFromLeft;
-			ac |= v;
+			ac |= ov;
+		}
+
+		public static byte[] GetBytes(uint value)
+		{
+			return ReverseAsNeeded(BitConverter.GetBytes(value));
+		}
+
+		static byte[] ReverseAsNeeded(byte[] bytes)
+		{
+			if (!BitConverter.IsLittleEndian)
+			{
+				return bytes;
+			}
+			else
+			{
+				Array.Reverse(bytes);
+				return bytes;
+			}
 		}
 
 		void WriteOctets()
 		{
-			var octets = new byte[] {
-				(byte)((ac & 0xff000000) >> 24),
-				(byte)((ac & 0x00ff0000) >> 16),
-				(byte)((ac & 0x0000ff00) >> 8),
-				(byte)(ac & 0xff)
-			};
+			var octets = GetBytes(ac);
 
 			octetWriter.WriteOctets(octets);
 			ac = 0;
 			remainingBits = 32;
+		}
+
+		public void WriteSignedBits(int v, int count)
+		{
+			var sign = v < 0 ? 1 : 0;
+
+			if (sign != 0)
+			{
+				v = -v;
+			}
+			WriteBits((uint)sign, 1);
+			WriteBits((uint)v, count - 1);
 		}
 
 		public void WriteBits(uint v, int count)
@@ -108,7 +140,7 @@ namespace Piot.Brook
 
 			if (count > remainingBits)
 			{
-				var firstWriteCount = count - remainingBits;
+				var firstWriteCount = remainingBits;
 				WriteRest(v, count, firstWriteCount);
 				WriteOctets();
 				WriteRest(v, count - firstWriteCount, count - firstWriteCount);

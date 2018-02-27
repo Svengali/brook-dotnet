@@ -29,7 +29,6 @@ using Piot.Brook;
 namespace Tests
 {
 	using System;
-	using System.Net;
 	using Xunit;
 
 	public class OutStreamTest

@@ -29,56 +29,58 @@ namespace Tests
 {
 	using Xunit;
 
-	public class InBitStreamTest
+	public class InOutBitStreamTest
 	{
-		static IInBitStream Setup(byte[] octets)
+		static OutBitStream Setup(out OctetWriter octetWriter)
 		{
-			var octetReader = new OctetReader(octets);
+			octetWriter = new OctetWriter(128);
+			var bitStream = new OutBitStream(octetWriter);
+
+			return bitStream;
+		}
+
+		static IInBitStream SetupIn(OctetWriter writer)
+		{
+			var octetReader = new OctetReader(writer.Octets);
 			var bitStream = new InBitStream(octetReader);
 
 			return bitStream;
 		}
 
 		[Fact]
-		public static void ReadNibble()
+		public static void WriteAndReadSigned16bit()
 		{
-			var bitStream = Setup(new byte[] {0x3c});
+			OctetWriter writer;
+			var outStream = Setup(out writer);
+			var v = (short)-23988;
 
-			var t = bitStream.ReadBits(2);
-
-			Assert.Equal((uint)0, t);
-
-			var t2 = bitStream.ReadBits(1);
-			Assert.Equal((uint)1, t2);
-
-			var t3 = bitStream.ReadBits(1);
-			Assert.Equal((uint)1, t3);
+			outStream.WriteInt16(v);
+			outStream.Flush();
+			var inStream = SetupIn(writer);
+			var rv = inStream.ReadInt16();
+			Assert.Equal(-23988, rv);
 		}
 
 		[Fact]
-		public static void ReadTooFar()
+		public static void WriteTwoNumbers()
 		{
-			var bitStream = Setup(new byte[] {0xfe});
+			OctetWriter writer;
+			var outStream = Setup(out writer);
+			const short otherValue = 1234;
+			var v = (short)-23988;
+			var u = otherValue;
 
-			var t = bitStream.ReadBits(4);
-
-			Assert.Equal((uint)15, t);
-
-			Assert.Throws<EndOfStreamException>(() => bitStream.ReadBits(5));
-		}
-
-		[Fact]
-		public static void ReadOverDWord()
-		{
-			var bitStream = Setup(new byte[] {0xca, 0xfe, 0xba, 0xdb, 0xee, 0xf0});
-
-			var t = bitStream.ReadBits(24);
-
-			Assert.Equal((uint)(0xcafeba), t);
-
-			var t2 = bitStream.ReadBits(16);
-
-			Assert.Equal((uint)(0xdbee), t2);
+			outStream.WriteBits(2, 3);
+			outStream.WriteInt16(v);
+			outStream.WriteInt16(u);
+			outStream.Flush();
+			var inStream = SetupIn(writer);
+			var x = inStream.ReadBits(3);
+			Assert.Equal((uint)2, x);
+			var rv = inStream.ReadInt16();
+			Assert.Equal(-23988, rv);
+			var ru = inStream.ReadInt16();
+			Assert.Equal(otherValue, ru);
 		}
 	}
 }
