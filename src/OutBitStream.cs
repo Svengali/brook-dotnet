@@ -53,6 +53,11 @@ namespace Piot.Brook
 			WriteBits(v, 8);
 		}
 
+		public void Flush()
+		{
+			WriteOctets();
+		}
+
 		uint MaskFromCount(int count)
 		{
 			return ((uint)1 << count) - 1;
@@ -90,6 +95,8 @@ namespace Piot.Brook
 			};
 
 			octetWriter.WriteOctets(octets);
+			ac = 0;
+			remainingBits = 32;
 		}
 
 		public void WriteBits(uint v, int count)
@@ -101,9 +108,10 @@ namespace Piot.Brook
 
 			if (count > remainingBits)
 			{
-				WriteRest(v, count, remainingBits - count);
+				var firstWriteCount = count - remainingBits;
+				WriteRest(v, count, firstWriteCount);
 				WriteOctets();
-				WriteRest(v, count - (remainingBits - count), count - (remainingBits - count));
+				WriteRest(v, count - firstWriteCount, count - firstWriteCount);
 			}
 			else
 			{
