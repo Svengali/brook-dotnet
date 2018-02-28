@@ -23,62 +23,20 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
-﻿using System;
-using System.IO;
-using Piot.Brook.Shared;
-
-namespace Piot.Brook.Octet
+﻿ namespace Piot.Brook
 {
-	public class OutOctetStream : IOutOctetStream
+	public interface IOutOctetStream
 	{
-		BinaryWriter writer;
-		MemoryStream memoryStream;
+		void WriteUint8(byte a);
 
-		public OutOctetStream()
-		{
-			memoryStream = new MemoryStream();
-			writer = new BinaryWriter(memoryStream);
-		}
+		void WriteUint16(ushort a);
 
-		public void WriteUint16(ushort data)
-		{
-			Write(EndianConverter.Uint16ToBytes(data));
-		}
+		void WriteUint32(uint a);
 
-		public void WriteUint32(uint data)
-		{
-			Write(EndianConverter.Uint32ToBytes(data));
-		}
+		void WriteUint64(ulong a);
 
-		public void WriteUint64(ulong data)
-		{
-			Write(EndianConverter.Uint64ToBytes(data));
-		}
+		void WriteOctets(byte[] data);
 
-		public void WriteUint8(byte data)
-		{
-			writer.Write(data);
-		}
-
-		public void Write(byte[] data)
-		{
-			writer.Write(data);
-		}
-
-		public void WriteOctets(byte[] data)
-		{
-			writer.Write(data);
-		}
-
-		public byte[] Close()
-		{
-			var writeBuf = memoryStream.GetBuffer();
-			var octetsWritten = (int)memoryStream.Length;
-			var bufferToReturn = new byte[octetsWritten];
-
-			Buffer.BlockCopy(writeBuf, 0, bufferToReturn, 0, octetsWritten);
-
-			return bufferToReturn;
-		}
+		byte[] Close();
 	}
 }

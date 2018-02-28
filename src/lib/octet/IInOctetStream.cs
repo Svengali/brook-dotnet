@@ -23,20 +23,23 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
-﻿namespace Piot.Brook
+﻿ namespace Piot.Brook
 {
-	public interface IOutOctetStream
+	public interface IInOctetStream
 	{
-		void WriteUint8(byte a);
+		ushort ReadUint16();
 
-		void WriteUint16(ushort a);
+		uint ReadUint32();
 
-		void WriteUint32(uint a);
+		ulong ReadUint64();
 
-		void WriteUint64(ulong a);
+		byte ReadUint8();
 
-		void WriteOctets(byte[] data);
+		byte[] ReadOctets(int octetCount);
 
-		byte[] Close();
+		int RemainingOctetCount
+		{
+			get;
+		}
 	}
 }

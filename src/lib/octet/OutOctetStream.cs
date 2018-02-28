@@ -23,68 +23,62 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
-﻿using System;
+﻿ using System;
+using System.IO;
 using Piot.Brook.Shared;
 
 namespace Piot.Brook.Octet
 {
-	public class InOctetStream : IInOctetStream
+	public class OutOctetStream : IOutOctetStream
 	{
-		readonly byte[] octets;
-		int pos;
+		BinaryWriter writer;
+		MemoryStream memoryStream;
 
-		public int RemainingOctetCount
+		public OutOctetStream()
 		{
-			get
-			{
-				return octets.Length - pos;
-			}
+			memoryStream = new MemoryStream();
+			writer = new BinaryWriter(memoryStream);
 		}
 
-		public InOctetStream(byte[] data)
+		public void WriteUint16(ushort data)
 		{
-			// this.log = log.CreateLog(typeof(OctetReader));
-			octets = data;
-			pos = 0;
-			// log.Debug("OctetReader:{0}", data.Length);
+			Write(EndianConverter.Uint16ToBytes(data));
 		}
 
-		public ushort ReadUint16()
+		public void WriteUint32(uint data)
 		{
-			return EndianConverter.BytesToUint16(ReadOctets(2));
+			Write(EndianConverter.Uint32ToBytes(data));
 		}
 
-		public uint ReadUint32()
+		public void WriteUint64(ulong data)
 		{
-			return EndianConverter.BytesToUint32(ReadOctets(4));
+			Write(EndianConverter.Uint64ToBytes(data));
 		}
 
-		public ulong ReadUint64()
+		public void WriteUint8(byte data)
 		{
-			return EndianConverter.BytesToUint64(ReadOctets(8));
+			writer.Write(data);
 		}
 
-		public byte ReadUint8()
+		public void Write(byte[] data)
 		{
-			var v = octets[pos++];
-
-			return v;
+			writer.Write(data);
 		}
 
-		public byte[] ReadOctets(int octetCount)
+		public void WriteOctets(byte[] data)
 		{
-			if (pos + octetCount > octets.Length)
-			{
-				var e = new Exception(string.Format("Reading too far {0} {1}", pos, octetCount));
-				//log.Exception(e);
-				throw e;
-			}
-			var buf = new byte[octetCount];
+			writer.Write(data);
+		}
 
-			Buffer.BlockCopy(octets, pos, buf, 0, octetCount);
-			pos += octetCount;
+		public byte[] Close()
+		{
+			var writeBuf = memoryStream.GetBuffer();
+			var octetsWritten = (int)memoryStream.Length;
+			var bufferToReturn = new byte[octetsWritten];
 
-			return buf;
+			Buffer.BlockCopy(writeBuf, 0, bufferToReturn, 0, octetsWritten);
+
+			return bufferToReturn;
 		}
 	}
 }
