@@ -30,7 +30,7 @@ namespace Piot.Brook
 {
 	public class OctetWriter : IOctetWriter
 	{
-		byte[] data;
+		readonly byte[] data;
 		int position;
 
 		public OctetWriter(int size)

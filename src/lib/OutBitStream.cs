@@ -53,6 +53,12 @@ namespace Piot.Brook
 			WriteBits(v, 32);
 		}
 
+		public void WriteUint64(ulong v)
+		{
+			WriteBits((uint)(v >> 32), 32);
+			WriteBits((uint)(v & 0xffffffff), 32);
+		}
+
 		public void WriteUint8(byte v)
 		{
 			WriteBits(v, 8);

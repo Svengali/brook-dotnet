@@ -35,6 +35,8 @@ namespace Piot.Brook
 
 		uint ReadUint32();
 
+		ulong ReadUint64();
+
 		byte ReadUint8();
 
 		uint ReadBits(int count);

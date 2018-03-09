@@ -23,6 +23,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
+﻿
 using System;
 
 namespace Piot.Brook
@@ -66,6 +67,17 @@ namespace Piot.Brook
 			return ReadBits(32);
 		}
 
+		public ulong ReadUint64()
+		{
+			var upper = (ulong)ReadBits(32);
+			var result = upper << 32;
+			var lower = (ulong)ReadBits(32);
+
+			result |= lower;
+
+			return result;
+		}
+
 		public byte ReadUint8()
 		{
 			return (byte) ReadBits(8);
@@ -90,7 +102,7 @@ namespace Piot.Brook
 			var mask = MaskFromCount(bitsToRead);
 			var shiftPos = (remainingBits - bitsToRead);
 			var bits = (data >> shiftPos) & mask;
-			// Console.WriteLine("READ mask {0:X} shift:{1} bits:{2:X} data:{3:X} {4:X}", mask, shiftPos, bits, data, (data >> shiftPos));
+			// Console.Error.WriteLine("READ mask {0:X} shift:{1} bits:{2:X} data:{3:X} {4:X}", mask, shiftPos, bits, data, (data >> shiftPos));
 			remainingBits -= bitsToRead;
 			return bits;
 		}
@@ -114,7 +126,7 @@ namespace Piot.Brook
 
 			data = newData;
 			remainingBits = octetsToRead * 8;
-			// Console.WriteLine("Data is now {0:X} octetsToRead:{1} Remaining:{2}", data, octetsToRead, remainingBits);
+			// Console.Error.WriteLine("Data is now {0:X} octetsToRead:{1} Remaining:{2}", data, octetsToRead, remainingBits);
 		}
 
 		public uint ReadBits(int count)

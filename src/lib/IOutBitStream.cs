@@ -35,6 +35,8 @@ namespace Piot.Brook
 
 		void WriteUint32(uint value);
 
+		void WriteUint64(ulong value);
+
 		void WriteUint8(byte value);
 
 		void WriteBits(uint value, int count);
