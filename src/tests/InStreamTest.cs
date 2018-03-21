@@ -34,7 +34,7 @@ namespace Tests
 		static IInBitStream Setup(byte[] octets)
 		{
 			var octetReader = new OctetReader(octets);
-			var bitStream = new InBitStream(octetReader);
+			var bitStream = new InBitStream(octetReader, octets.Length * 8);
 
 			return bitStream;
 		}

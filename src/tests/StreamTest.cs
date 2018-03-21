@@ -42,7 +42,7 @@ namespace Tests
 		static IInBitStream SetupIn(OctetWriter writer)
 		{
 			var octetReader = new OctetReader(writer.Octets);
-			var bitStream = new InBitStream(octetReader);
+			var bitStream = new InBitStream(octetReader, writer.Octets.Length * 8);
 
 			return bitStream;
 		}

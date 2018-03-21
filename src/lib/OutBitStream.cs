@@ -32,6 +32,7 @@ namespace Piot.Brook
 		IOctetWriter octetWriter;
 		int remainingBits = 32;
 		uint ac;
+		uint position;
 
 		public OutBitStream(IOctetWriter octetWriter)
 		{
@@ -64,6 +65,25 @@ namespace Piot.Brook
 			WriteBits(v, 8);
 		}
 
+		public void WriteFromStream(IInBitStream inBitStream, int bitCount)
+		{
+			const int ChunkBitSize = 32;
+			var restBitCount = bitCount % ChunkBitSize;
+			var chunkCount = bitCount / ChunkBitSize;
+
+			for (var i = 0; i < chunkCount; ++i)
+			{
+				var data = inBitStream.ReadBits(ChunkBitSize);
+				WriteBits(data, ChunkBitSize);
+			}
+
+			if (restBitCount > 0)
+			{
+				var restData = inBitStream.ReadBits(restBitCount);
+				WriteBits(restData, restBitCount);
+			}
+		}
+
 		public void Flush()
 		{
 			WriteOctets();
@@ -87,6 +107,14 @@ namespace Piot.Brook
 			}
 		}
 
+		public uint Tell
+		{
+			get
+			{
+				return position;
+			}
+		}
+
 		void WriteRest(uint v, int count, int bitsToKeepFromLeft)
 		{
 			var ov = v;
@@ -95,6 +123,7 @@ namespace Piot.Brook
 			ov &= MaskFromCount(bitsToKeepFromLeft);
 			ov <<= remainingBits - bitsToKeepFromLeft;
 			remainingBits -= bitsToKeepFromLeft;
+			position += (uint)bitsToKeepFromLeft;
 			ac |= ov;
 		}
 
