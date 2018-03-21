@@ -47,7 +47,9 @@ namespace Piot.Brook
 		{
 			get
 			{
-				return data;
+				var clone = new byte[position];
+				Array.Copy(data, 0, clone, 0, position);
+				return clone;
 			}
 		}
 
