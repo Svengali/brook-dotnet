@@ -33,10 +33,12 @@ namespace Piot.Brook
 		IOctetReader octetReader;
 		int remainingBits;
 		uint data;
+		int bitSize;
 
-		public InBitStream(IOctetReader octetReader)
+		public InBitStream(IOctetReader octetReader, int bitSize)
 		{
 			this.octetReader = octetReader;
+			this.bitSize = bitSize;
 		}
 
 		public ushort ReadUint16()
@@ -85,6 +87,10 @@ namespace Piot.Brook
 
 		uint MaskFromCount(int count)
 		{
+			if (count == 32)
+			{
+				return 0xffffffff;
+			}
 			return ((uint)1 << count) - 1;
 		}
 
@@ -101,7 +107,13 @@ namespace Piot.Brook
 			}
 			var mask = MaskFromCount(bitsToRead);
 			var shiftPos = (remainingBits - bitsToRead);
-			var bits = (data >> shiftPos) & mask;
+
+			var bits = (uint)0;
+
+			if (shiftPos < 32)
+			{
+				bits = (data >> shiftPos) & mask;
+			}
 			// Console.Error.WriteLine("READ mask {0:X} shift:{1} bits:{2:X} data:{3:X} {4:X}", mask, shiftPos, bits, data, (data >> shiftPos));
 			remainingBits -= bitsToRead;
 			return bits;
@@ -141,6 +153,7 @@ namespace Piot.Brook
 				var secondCount = count - remainingBits;
 				var v = ReadOnce(remainingBits);
 				Fill();
+
 				v <<= secondCount;
 				v |= ReadOnce(secondCount);
 				return v;
