@@ -33,6 +33,7 @@ namespace Piot.Brook
 		IOctetReader octetReader;
 		int remainingBits;
 		uint data;
+		int position;
 		int bitSize;
 
 		public InBitStream(IOctetReader octetReader, int bitSize)
@@ -107,6 +108,12 @@ namespace Piot.Brook
 			}
 			var mask = MaskFromCount(bitsToRead);
 			var shiftPos = (remainingBits - bitsToRead);
+
+			if (position + bitsToRead > bitSize)
+			{
+				throw new EndOfStreamException();
+			}
+			position += bitsToRead;
 
 			var bits = (uint)0;
 
