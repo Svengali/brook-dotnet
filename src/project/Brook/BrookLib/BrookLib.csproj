@@ -50,5 +50,11 @@
     <Compile Include="..\..\..\lib\octet\OutOctetStream.cs">
       <Link>octet\OutOctetStream.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\lib\DebugInBitStream.cs">
+      <Link>DebugInBitStream.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\lib\DebugOutBitStream.cs">
+      <Link>DebugOutBitStream.cs</Link>
+    </Compile>
   </ItemGroup>
 </Project>

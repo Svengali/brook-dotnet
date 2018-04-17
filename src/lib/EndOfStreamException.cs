@@ -33,6 +33,10 @@ namespace Piot.Brook
 		{
 		}
 
+		public EndOfStreamException(int requestedRead, int remainingBits) : base($"requested:{requestedRead} remaining:{remainingBits}")
+		{
+		}
+
 		public EndOfStreamException(string message)
 			: base(message)
 		{

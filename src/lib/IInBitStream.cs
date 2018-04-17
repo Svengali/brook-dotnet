@@ -41,6 +41,8 @@ namespace Piot.Brook
 
 		uint ReadBits(int count);
 
+		uint ReadRawBits(int count);
+
 		int ReadSignedBits(int count);
 	}
 }

@@ -73,14 +73,14 @@ namespace Piot.Brook
 
 			for (var i = 0; i < chunkCount; ++i)
 			{
-				var data = inBitStream.ReadBits(ChunkBitSize);
-				WriteBits(data, ChunkBitSize);
+				var data = inBitStream.ReadRawBits(ChunkBitSize);
+				WriteRawBits(data, ChunkBitSize);
 			}
 
 			if (restBitCount > 0)
 			{
-				var restData = inBitStream.ReadBits(restBitCount);
-				WriteBits(restData, restBitCount);
+				var restData = inBitStream.ReadRawBits(restBitCount);
+				WriteRawBits(restData, restBitCount);
 			}
 		}
 
@@ -184,6 +184,11 @@ namespace Piot.Brook
 			{
 				WriteRest(v, count, count);
 			}
+		}
+
+		public void WriteRawBits(uint v, int count)
+		{
+			WriteBits(v, count);
 		}
 	}
 }

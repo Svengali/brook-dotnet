@@ -41,6 +41,8 @@ namespace Piot.Brook
 
 		void WriteBits(uint value, int count);
 
+		void WriteRawBits(uint value, int count);
+
 		void WriteSignedBits(int value, int count);
 
 		uint Tell
@@ -49,5 +51,7 @@ namespace Piot.Brook
 		}
 
 		void WriteFromStream(IInBitStream inBitStream, int bitCount);
+
+		void Flush();
 	}
 }

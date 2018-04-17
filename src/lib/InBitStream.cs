@@ -25,6 +25,7 @@ SOFTWARE.
 */
 ﻿
 using System;
+using Piot.Log;
 
 namespace Piot.Brook
 {
@@ -35,9 +36,11 @@ namespace Piot.Brook
 		uint data;
 		int position;
 		int bitSize;
+		ILog log;
 
-		public InBitStream(IOctetReader octetReader, int bitSize)
+		public InBitStream(ILog log, IOctetReader octetReader, int bitSize)
 		{
+			this.log = log;
 			this.octetReader = octetReader;
 			this.bitSize = bitSize;
 		}
@@ -72,9 +75,9 @@ namespace Piot.Brook
 
 		public ulong ReadUint64()
 		{
-			var upper = (ulong)ReadBits(32);
+			var upper = (ulong)ReadRawBits(32);
 			var result = upper << 32;
-			var lower = (ulong)ReadBits(32);
+			var lower = (ulong)ReadRawBits(32);
 
 			result |= lower;
 
@@ -104,14 +107,16 @@ namespace Piot.Brook
 
 			if (bitsToRead > remainingBits)
 			{
-				throw new EndOfStreamException();
+				throw new EndOfStreamException(bitsToRead, remainingBits);
 			}
 			var mask = MaskFromCount(bitsToRead);
 			var shiftPos = (remainingBits - bitsToRead);
 
 			if (position + bitsToRead > bitSize)
 			{
-				throw new EndOfStreamException();
+				var s = $"Position:{position} bitsToRead:{bitsToRead} bitSize:{bitSize}";
+				log.Warning(s);
+				throw new EndOfStreamException(s);
 			}
 			position += bitsToRead;
 
@@ -169,6 +174,11 @@ namespace Piot.Brook
 			{
 				return ReadOnce(count);
 			}
+		}
+
+		public uint ReadRawBits(int count)
+		{
+			return ReadBits(count);
 		}
 	}
 }
