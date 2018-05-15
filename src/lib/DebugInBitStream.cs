@@ -53,7 +53,7 @@ namespace Piot.Brook
 
 			if (bitCount != expectedBitCount)
 			{
-				throw new Exception($"Expected type {expectedBitCount} received {bitCount}");
+				throw new Exception($"Expected bitcount {expectedBitCount} received {bitCount}");
 			}
 		}
 

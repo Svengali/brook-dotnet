@@ -57,4 +57,9 @@
       <Link>DebugOutBitStream.cs</Link>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="LogLib">
+      <HintPath>..\..\..\..\..\..\work\replication-client-dotnet\src\assemblies\LogLib.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>
