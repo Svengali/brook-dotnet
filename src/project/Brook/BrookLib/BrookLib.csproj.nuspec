@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Brook.Net</id>
+    <version>1.0.0</version>
+    <authors>Piot</authors>
+    <owners>Piot</owners>
+    <licenseUrl>https://opensource.org/licenses/MIT</licenseUrl>
+    <projectUrl>https://github.com/Piot/brook-dotnet</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Bitstreams</description>
+    <releaseNotes>Initial commit.</releaseNotes>
+    <copyright>Copyright 2017</copyright>
+    <tags>streams</tags>
+    <dependencies>
+    </dependencies>
+  </metadata>
+</package>
