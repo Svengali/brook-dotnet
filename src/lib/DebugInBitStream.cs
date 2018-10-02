@@ -32,7 +32,7 @@ namespace Piot.Brook
 {
 	public class DebugInBitStream : IInBitStream
 	{
-		IInBitStream bitStream;
+		readonly IInBitStream bitStream;
 		ILog log;
 
 		public DebugInBitStream(ILog log, IInBitStream bitStream)
@@ -68,6 +68,8 @@ namespace Piot.Brook
 			CheckType(6, count);
 			return bitStream.ReadSignedBits(count);
 		}
+
+		public bool IsEof => bitStream.IsEof;
 
 		public short ReadInt16()
 		{

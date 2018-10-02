@@ -2,6 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>Brook.Net</PackageId>
+    <Version>1.1.0</Version>
+    <Authors>Piot</Authors>
+    <Description>Bitstreams</Description>
+    <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <PackageProjectUrl> https://github.com/Piot/brook-dotnet</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/piot/brook-dotnet.git</RepositoryUrl>
+    <PacketReleaseNotes>Added IsEof</PacketReleaseNotes>
+    <IncludeSymbols>true</IncludeSymbols>
   </PropertyGroup>
 
   <ItemGroup>

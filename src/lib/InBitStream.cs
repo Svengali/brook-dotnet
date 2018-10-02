@@ -31,12 +31,12 @@ namespace Piot.Brook
 {
 	public class InBitStream : IInBitStream
 	{
-		IOctetReader octetReader;
+		readonly IOctetReader octetReader;
 		int remainingBits;
 		uint data;
 		int position;
-		int bitSize;
-		ILog log;
+		readonly int bitSize;
+		readonly ILog log;
 
 		public InBitStream(ILog log, IOctetReader octetReader, int bitSize)
 		{
@@ -62,6 +62,8 @@ namespace Piot.Brook
 
 			return v;
 		}
+
+		public bool IsEof => position == bitSize;
 
 		public short ReadInt16()
 		{
