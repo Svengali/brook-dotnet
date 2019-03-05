@@ -27,168 +27,185 @@ using System;
 
 namespace Piot.Brook
 {
-	public class OutBitStream : IOutBitStream
-	{
-		IOctetWriter octetWriter;
-		int remainingBits = 32;
-		uint ac;
-		uint position;
+    public class OutBitStream : IOutBitStream
+    {
+        IOctetWriter octetWriter;
+        int remainingBits = 32;
+        uint ac;
+        uint position;
 
-		public OutBitStream(IOctetWriter octetWriter)
-		{
-			this.octetWriter = octetWriter;
-		}
+        public OutBitStream(IOctetWriter octetWriter)
+        {
+            this.octetWriter = octetWriter;
+        }
 
-		public void WriteUint16(ushort v)
-		{
-			WriteBits(v, 16);
-		}
+        public void WriteUint16(ushort v)
+        {
+            WriteBits(v, 16);
+        }
 
-		public void WriteInt16(short v)
-		{
-			WriteSignedBits(v, 16);
-		}
+        public void WriteInt16(short v)
+        {
+            WriteSignedBits(v, 16);
+        }
 
-		public void WriteUint32(uint v)
-		{
-			WriteBits(v, 32);
-		}
+        public void WriteUint32(uint v)
+        {
+            WriteBits(v, 32);
+        }
 
-		public void WriteUint64(ulong v)
-		{
-			WriteBits((uint)(v >> 32), 32);
-			WriteBits((uint)(v & 0xffffffff), 32);
-		}
+        public void WriteUint64(ulong v)
+        {
+            WriteBits((uint)(v >> 32), 32);
+            WriteBits((uint)(v & 0xffffffff), 32);
+        }
 
-		public void WriteUint8(byte v)
-		{
-			WriteBits(v, 8);
-		}
+        public void WriteUint8(byte v)
+        {
+            WriteBits(v, 8);
+        }
 
-		public void WriteFromStream(IInBitStream inBitStream, int bitCount)
-		{
-			const int ChunkBitSize = 32;
-			var restBitCount = bitCount % ChunkBitSize;
-			var chunkCount = bitCount / ChunkBitSize;
+        public void WriteFromStream(IInBitStream inBitStream, int bitCount)
+        {
+            const int ChunkBitSize = 32;
+            var restBitCount = bitCount % ChunkBitSize;
+            var chunkCount = bitCount / ChunkBitSize;
 
-			for (var i = 0; i < chunkCount; ++i)
-			{
-				var data = inBitStream.ReadRawBits(ChunkBitSize);
-				WriteRawBits(data, ChunkBitSize);
-			}
+            for (var i = 0; i < chunkCount; ++i)
+            {
+                var data = inBitStream.ReadRawBits(ChunkBitSize);
+                WriteRawBits(data, ChunkBitSize);
+            }
 
-			if (restBitCount > 0)
-			{
-				var restData = inBitStream.ReadRawBits(restBitCount);
-				WriteRawBits(restData, restBitCount);
-			}
-		}
+            if (restBitCount > 0)
+            {
+                var restData = inBitStream.ReadRawBits(restBitCount);
+                WriteRawBits(restData, restBitCount);
+            }
+        }
 
-		public void Flush()
-		{
-			WriteOctets();
-		}
+        public void Flush()
+        {
+            WriteLast();
+        }
 
-		uint MaskFromCount(int count)
-		{
-			return ((uint)1 << count) - 1;
-		}
+        uint MaskFromCount(int count)
+        {
+            return ((uint)1 << count) - 1;
+        }
 
-		void WriteOctet(byte v)
-		{
-			octetWriter.WriteOctet(v);
-		}
+        void WriteOctet(byte v)
+        {
+            octetWriter.WriteOctet(v);
+        }
 
-		public uint Accumulator
-		{
-			get
-			{
-				return ac;
-			}
-		}
+        public uint Accumulator
+        {
+            get
+            {
+                return ac;
+            }
+        }
 
-		public uint Tell
-		{
-			get
-			{
-				return position;
-			}
-		}
+        public uint Tell
+        {
+            get
+            {
+                return position;
+            }
+        }
 
-		void WriteRest(uint v, int count, int bitsToKeepFromLeft)
-		{
-			var ov = v;
+        void WriteRest(uint v, int count, int bitsToKeepFromLeft)
+        {
+            var ov = v;
 
-			ov >>= (count - bitsToKeepFromLeft);
-			ov &= MaskFromCount(bitsToKeepFromLeft);
-			ov <<= remainingBits - bitsToKeepFromLeft;
-			remainingBits -= bitsToKeepFromLeft;
-			position += (uint)bitsToKeepFromLeft;
-			ac |= ov;
-		}
+            ov >>= (count - bitsToKeepFromLeft);
+            ov &= MaskFromCount(bitsToKeepFromLeft);
+            ov <<= remainingBits - bitsToKeepFromLeft;
+            remainingBits -= bitsToKeepFromLeft;
+            position += (uint)bitsToKeepFromLeft;
+            ac |= ov;
+        }
 
-		public static byte[] GetBytes(uint value)
-		{
-			return ReverseAsNeeded(BitConverter.GetBytes(value));
-		}
+        public static byte[] GetBytes(uint value)
+        {
+            return ReverseAsNeeded(BitConverter.GetBytes(value));
+        }
 
-		static byte[] ReverseAsNeeded(byte[] bytes)
-		{
-			if (!BitConverter.IsLittleEndian)
-			{
-				return bytes;
-			}
-			else
-			{
-				Array.Reverse(bytes);
-				return bytes;
-			}
-		}
+        static byte[] ReverseAsNeeded(byte[] bytes)
+        {
+            if (!BitConverter.IsLittleEndian)
+            {
+                return bytes;
+            }
+            else
+            {
+                Array.Reverse(bytes);
+                return bytes;
+            }
+        }
 
-		void WriteOctets()
-		{
-			var octets = GetBytes(ac);
+        void WriteOctets()
+        {
+            var octets = GetBytes(ac);
 
-			octetWriter.WriteOctets(octets);
-			ac = 0;
-			remainingBits = 32;
-		}
+            octetWriter.WriteOctets(octets);
+            ac = 0;
+            remainingBits = 32;
+        }
 
-		public void WriteSignedBits(int v, int count)
-		{
-			var sign = v < 0 ? 1 : 0;
+        void WriteLast()
+        {
+            if (remainingBits == 32)
+            {
+                return;
+            }
 
-			if (sign != 0)
-			{
-				v = -v;
-			}
-			WriteBits((uint)sign, 1);
-			WriteBits((uint)v, count - 1);
-		}
+            var bitsWritten = 32 - remainingBits;
+            var octetCount = ((bitsWritten - 1) / 8) + 1;
+            for (var i = 0; i < octetCount; i++)
+            {
+                var outOctet = (byte)((ac & 0xff000000) >> 24);
+                ac <<= 8;
+                octetWriter.WriteOctet(outOctet);
+            }
+        }
 
-		public void WriteBits(uint v, int count)
-		{
-			if (count > 32)
-			{
-				throw new Exception("Max 32 bits to write ");
-			}
+        public void WriteSignedBits(int v, int count)
+        {
+            var sign = v < 0 ? 1 : 0;
 
-			if (count > remainingBits)
-			{
-				var firstWriteCount = remainingBits;
-				WriteRest(v, count, firstWriteCount);
-				WriteOctets();
-				WriteRest(v, count - firstWriteCount, count - firstWriteCount);
-			}
-			else
-			{
-				WriteRest(v, count, count);
-			}
-		}
+            if (sign != 0)
+            {
+                v = -v;
+            }
+            WriteBits((uint)sign, 1);
+            WriteBits((uint)v, count - 1);
+        }
 
-		public void WriteRawBits(uint v, int count)
-		{
-			WriteBits(v, count);
-		}
-	}
+        public void WriteBits(uint v, int count)
+        {
+            if (count > 32)
+            {
+                throw new Exception("Max 32 bits to write ");
+            }
+
+            if (count > remainingBits)
+            {
+                var firstWriteCount = remainingBits;
+                WriteRest(v, count, firstWriteCount);
+                WriteOctets();
+                WriteRest(v, count - firstWriteCount, count - firstWriteCount);
+            }
+            else
+            {
+                WriteRest(v, count, count);
+            }
+        }
+
+        public void WriteRawBits(uint v, int count)
+        {
+            WriteBits(v, count);
+        }
+    }
 }
