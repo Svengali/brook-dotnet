@@ -23,92 +23,93 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
-﻿
+
 
 using System;
 using Piot.Log;
 
 namespace Piot.Brook
 {
-	public class DebugInBitStream : IInBitStream
-	{
-		readonly IInBitStream bitStream;
-		ILog log;
+    public class DebugInBitStream : IInBitStream
+    {
+        readonly IInBitStream bitStream;
+        ILog log;
 
-		public DebugInBitStream(ILog log, IInBitStream bitStream)
-		{
-			this.log = log;
-			this.bitStream = bitStream;
-		}
+        public DebugInBitStream(ILog log, IInBitStream bitStream)
+        {
+            this.log = log;
+            this.bitStream = bitStream;
+        }
 
-		void CheckType(int expectedType, int expectedBitCount)
-		{
-			var type = bitStream.ReadBits(4);
-			var bitCount = bitStream.ReadBits(7);
+        void CheckType(DebugSerializeType expectedType, int expectedBitCount)
+        {
+            var type = (DebugSerializeType)bitStream.ReadBits(4);
+            var bitCount = bitStream.ReadBits(7);
 
-			if (type != expectedType)
-			{
-				throw new Exception($"Expected type {expectedType} received {type}");
-			}
+            if (bitCount != expectedBitCount)
+            {
+                throw new Exception($"Expected type {expectedType} bitcount {expectedBitCount} received type {type} {bitCount}");
+            }
 
-			if (bitCount != expectedBitCount)
-			{
-				throw new Exception($"Expected bitcount {expectedBitCount} received {bitCount}");
-			}
-		}
+            if (type != expectedType)
+            {
+                throw new Exception($"Expected type {expectedType} received {type}");
+            }
 
-		public ushort ReadUint16()
-		{
-			CheckType(1, 16);
-			return bitStream.ReadUint16();
-		}
+        }
 
-		public int ReadSignedBits(int count)
-		{
-			CheckType(6, count);
-			return bitStream.ReadSignedBits(count);
-		}
+        public ushort ReadUint16()
+        {
+            CheckType(DebugSerializeType.Uint16, 16);
+            return bitStream.ReadUint16();
+        }
 
-		public bool IsEof => bitStream.IsEof;
+        public int ReadSignedBits(int count)
+        {
+            CheckType(DebugSerializeType.SignedBits, count);
+            return bitStream.ReadSignedBits(count);
+        }
 
-		public short ReadInt16()
-		{
-			CheckType(2, 16);
-			return bitStream.ReadInt16();
-		}
+        public bool IsEof => bitStream.IsEof;
 
-		public uint ReadUint32()
-		{
-			CheckType(3, 32);
-			return bitStream.ReadUint32();
-		}
+        public short ReadInt16()
+        {
+            CheckType(DebugSerializeType.Int16, 16);
+            return bitStream.ReadInt16();
+        }
 
-		public ulong ReadUint64()
-		{
-			CheckType(4, 64);
-			return bitStream.ReadUint64();
-		}
+        public uint ReadUint32()
+        {
+            CheckType(DebugSerializeType.Uint32, 32);
+            return bitStream.ReadUint32();
+        }
 
-		public byte ReadUint8()
-		{
-			CheckType(5, 8);
-			return bitStream.ReadUint8();
-		}
+        public ulong ReadUint64()
+        {
+            CheckType(DebugSerializeType.Uint64, 64);
+            return bitStream.ReadUint64();
+        }
 
-		public uint ReadBits(int count)
-		{
-			CheckType(7, count);
-			return bitStream.ReadBits(count);
-		}
+        public byte ReadUint8()
+        {
+            CheckType(DebugSerializeType.Uint8, 8);
+            return bitStream.ReadUint8();
+        }
 
-		public uint ReadRawBits(int count)
-		{
-			return bitStream.ReadBits(count);
-		}
+        public uint ReadBits(int count)
+        {
+            CheckType(DebugSerializeType.UnsignedBits, count);
+            return bitStream.ReadBits(count);
+        }
 
-		uint InternalReadBits(int count)
-		{
-			return bitStream.ReadBits(count);
-		}
-	}
+        public uint ReadRawBits(int count)
+        {
+            return bitStream.ReadBits(count);
+        }
+
+        uint InternalReadBits(int count)
+        {
+            return bitStream.ReadBits(count);
+        }
+    }
 }
