@@ -25,7 +25,7 @@ SOFTWARE.
 */
 ﻿ namespace Piot.Brook
 {
-	public interface IInOctetStream
+	public interface IInOctetStream : IOctetReader
 	{
 		ushort ReadUint16();
 
@@ -34,12 +34,5 @@ SOFTWARE.
 		ulong ReadUint64();
 
 		byte ReadUint8();
-
-		byte[] ReadOctets(int octetCount);
-
-		int RemainingOctetCount
-		{
-			get;
-		}
 	}
 }

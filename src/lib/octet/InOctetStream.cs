@@ -23,7 +23,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
-﻿ using System;
+  using System;
 using Piot.Brook.Shared;
 
 namespace Piot.Brook.Octet
@@ -69,6 +69,11 @@ namespace Piot.Brook.Octet
 			var v = octets[pos++];
 
 			return v;
+		}
+
+		public byte ReadOctet()
+		{
+			return ReadUint8();
 		}
 
 		public byte[] ReadOctets(int octetCount)
