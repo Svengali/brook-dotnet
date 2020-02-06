@@ -23,16 +23,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
-﻿ namespace Piot.Brook
+namespace Piot.Brook
 {
-	public interface IInOctetStream : IOctetReader
-	{
-		ushort ReadUint16();
+    public interface IInOctetStream : IOctetReader
+    {
+        ushort ReadUint16();
 
-		uint ReadUint32();
+        uint ReadUint32();
 
-		ulong ReadUint64();
+        ulong ReadUint64();
 
-		byte ReadUint8();
-	}
+        byte ReadUint8();
+    }
 }

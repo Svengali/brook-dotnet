@@ -27,58 +27,58 @@ using Piot.Brook;
 
 namespace Tests
 {
-	using Xunit;
+    using Xunit;
 
-	public class InBitStreamTest
-	{
-		static IInBitStream Setup(byte[] octets)
-		{
-			var octetReader = new OctetReader(octets);
-			var bitStream = new InBitStream(null, octetReader, octets.Length * 8);
+    public class InBitStreamTest
+    {
+        static IInBitStream Setup(byte[] octets)
+        {
+            var octetReader = new OctetReader(octets);
+            var bitStream = new InBitStream(null, octetReader, octets.Length * 8);
 
-			return bitStream;
-		}
+            return bitStream;
+        }
 
-		[Fact]
-		public static void ReadNibble()
-		{
-			var bitStream = Setup(new byte[] {0x3c});
+        [Fact]
+        public static void ReadNibble()
+        {
+            var bitStream = Setup(new byte[] { 0x3c });
 
-			var t = bitStream.ReadBits(2);
+            var t = bitStream.ReadBits(2);
 
-			Assert.Equal((uint)0, t);
+            Assert.Equal((uint)0, t);
 
-			var t2 = bitStream.ReadBits(1);
-			Assert.Equal((uint)1, t2);
+            var t2 = bitStream.ReadBits(1);
+            Assert.Equal((uint)1, t2);
 
-			var t3 = bitStream.ReadBits(1);
-			Assert.Equal((uint)1, t3);
-		}
+            var t3 = bitStream.ReadBits(1);
+            Assert.Equal((uint)1, t3);
+        }
 
-		[Fact]
-		public static void ReadTooFar()
-		{
-			var bitStream = Setup(new byte[] {0xfe});
+        [Fact]
+        public static void ReadTooFar()
+        {
+            var bitStream = Setup(new byte[] { 0xfe });
 
-			var t = bitStream.ReadBits(4);
+            var t = bitStream.ReadBits(4);
 
-			Assert.Equal((uint)15, t);
+            Assert.Equal((uint)15, t);
 
-			Assert.Throws<EndOfStreamException>(() => bitStream.ReadBits(5));
-		}
+            Assert.Throws<EndOfStreamException>(() => bitStream.ReadBits(5));
+        }
 
-		[Fact]
-		public static void ReadOverDWord()
-		{
-			var bitStream = Setup(new byte[] {0xca, 0xfe, 0xba, 0xdb, 0xee, 0xf0});
+        [Fact]
+        public static void ReadOverDWord()
+        {
+            var bitStream = Setup(new byte[] { 0xca, 0xfe, 0xba, 0xdb, 0xee, 0xf0 });
 
-			var t = bitStream.ReadBits(24);
+            var t = bitStream.ReadBits(24);
 
-			Assert.Equal((uint)(0xcafeba), t);
+            Assert.Equal((uint)(0xcafeba), t);
 
-			var t2 = bitStream.ReadBits(16);
+            var t2 = bitStream.ReadBits(16);
 
-			Assert.Equal((uint)(0xdbee), t2);
-		}
-	}
+            Assert.Equal((uint)(0xdbee), t2);
+        }
+    }
 }

@@ -27,31 +27,31 @@ using System;
 
 namespace Piot.Brook
 {
-	public interface IOutBitStream
-	{
-		void WriteUint16(ushort value);
+    public interface IOutBitStream
+    {
+        void WriteUint16(ushort value);
 
-		void WriteInt16(short value);
+        void WriteInt16(short value);
 
-		void WriteUint32(uint value);
+        void WriteUint32(uint value);
 
-		void WriteUint64(ulong value);
+        void WriteUint64(ulong value);
 
-		void WriteUint8(byte value);
+        void WriteUint8(byte value);
 
-		void WriteBits(uint value, int count);
+        void WriteBits(uint value, int count);
 
-		void WriteRawBits(uint value, int count);
+        void WriteRawBits(uint value, int count);
 
-		void WriteSignedBits(int value, int count);
+        void WriteSignedBits(int value, int count);
 
-		uint Tell
-		{
-			get;
-		}
+        uint Tell
+        {
+            get;
+        }
 
-		void WriteFromStream(IInBitStream inBitStream, int bitCount);
+        void WriteFromStream(IInBitStream inBitStream, int bitCount);
 
-		void Flush();
-	}
+        void Flush();
+    }
 }

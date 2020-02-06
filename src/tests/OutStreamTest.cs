@@ -23,81 +23,81 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
-﻿
+
 using Piot.Brook;
 
 namespace Tests
 {
-	using System;
-	using Xunit;
+    using System;
+    using Xunit;
 
-	public class OutStreamTest
-	{
-		static OutBitStream Setup(out OctetWriter octetWriter)
-		{
-			octetWriter = new OctetWriter(128);
-			var bitStream = new OutBitStream(octetWriter);
+    public class OutStreamTest
+    {
+        static OutBitStream Setup(out OctetWriter octetWriter)
+        {
+            octetWriter = new OctetWriter(128);
+            var bitStream = new OutBitStream(octetWriter);
 
-			return bitStream;
-		}
+            return bitStream;
+        }
 
-		[Fact]
-		public static void WriteNibble()
-		{
-			OctetWriter writer;
-			var bitStream = Setup(out writer);
+        [Fact]
+        public static void WriteNibble()
+        {
+            OctetWriter writer;
+            var bitStream = Setup(out writer);
 
-			bitStream.WriteBits(0, 2);
-			Assert.Equal((byte)0, bitStream.Accumulator);
-			bitStream.WriteBits(1, 1);
-			Assert.Equal((uint)0x20000000, bitStream.Accumulator);
-			bitStream.WriteBits(1, 1);
-			Assert.Equal((uint)0x30000000, bitStream.Accumulator);
-		}
+            bitStream.WriteBits(0, 2);
+            Assert.Equal((byte)0, bitStream.Accumulator);
+            bitStream.WriteBits(1, 1);
+            Assert.Equal((uint)0x20000000, bitStream.Accumulator);
+            bitStream.WriteBits(1, 1);
+            Assert.Equal((uint)0x30000000, bitStream.Accumulator);
+        }
 
-		[Fact]
-		public static void WriteMoreThanOctet()
-		{
-			OctetWriter writer;
-			var bitStream = Setup(out writer);
+        [Fact]
+        public static void WriteMoreThanOctet()
+        {
+            OctetWriter writer;
+            var bitStream = Setup(out writer);
 
-			bitStream.WriteBits(0xf, 4);
-			Assert.Equal(0xf0000000, bitStream.Accumulator);
-			bitStream.WriteBits(0x3, 2);
-			Assert.Equal(0xfc000000, bitStream.Accumulator);
-			bitStream.WriteBits(0x5, 4);
-			Assert.Equal(0xfd400000, bitStream.Accumulator);
-		}
+            bitStream.WriteBits(0xf, 4);
+            Assert.Equal(0xf0000000, bitStream.Accumulator);
+            bitStream.WriteBits(0x3, 2);
+            Assert.Equal(0xfc000000, bitStream.Accumulator);
+            bitStream.WriteBits(0x5, 4);
+            Assert.Equal(0xfd400000, bitStream.Accumulator);
+        }
 
-		static uint ConvertFromNetworkOrderUint32(byte[] octets)
-		{
-			var four = new byte[4];
+        static uint ConvertFromNetworkOrderUint32(byte[] octets)
+        {
+            var four = new byte[4];
 
-			Array.Copy(octets, four, 4);
+            Array.Copy(octets, four, 4);
 
-			if (BitConverter.IsLittleEndian)
-			{
-				Array.Reverse(four);
-			}
+            if (BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(four);
+            }
 
-			return BitConverter.ToUInt32(four, 0);
-		}
+            return BitConverter.ToUInt32(four, 0);
+        }
 
-		[Fact]
-		public static void WriteMoreThan32bit()
-		{
-			OctetWriter writer;
-			var bitStream = Setup(out writer);
+        [Fact]
+        public static void WriteMoreThan32bit()
+        {
+            OctetWriter writer;
+            var bitStream = Setup(out writer);
 
-			bitStream.WriteBits(0xfefe, 16);
-			Assert.Equal(0xfefe0000, bitStream.Accumulator);
-			bitStream.WriteBits(0xcd31, 15);
-			Assert.Equal(0xfefe9a62, bitStream.Accumulator);
-			bitStream.WriteBits(0x3, 2);
-			var octets = writer.Octets;
-			var stored = ConvertFromNetworkOrderUint32(octets);
-			Assert.Equal(0xfefe9a63, stored);
-			Assert.Equal(0x80000000, bitStream.Accumulator);
-		}
-	}
+            bitStream.WriteBits(0xfefe, 16);
+            Assert.Equal(0xfefe0000, bitStream.Accumulator);
+            bitStream.WriteBits(0xcd31, 15);
+            Assert.Equal(0xfefe9a62, bitStream.Accumulator);
+            bitStream.WriteBits(0x3, 2);
+            var octets = writer.Octets;
+            var stored = ConvertFromNetworkOrderUint32(octets);
+            Assert.Equal(0xfefe9a63, stored);
+            Assert.Equal(0x80000000, bitStream.Accumulator);
+        }
+    }
 }

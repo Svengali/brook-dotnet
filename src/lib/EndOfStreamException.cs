@@ -27,24 +27,24 @@ using System;
 
 namespace Piot.Brook
 {
-	public class EndOfStreamException : Exception
-	{
-		public EndOfStreamException()
-		{
-		}
+    public class EndOfStreamException : Exception
+    {
+        public EndOfStreamException()
+        {
+        }
 
-		public EndOfStreamException(int requestedRead, int remainingBits) : base($"requested:{requestedRead} remaining:{remainingBits}")
-		{
-		}
+        public EndOfStreamException(int requestedRead, int remainingBits) : base($"requested:{requestedRead} remaining:{remainingBits}")
+        {
+        }
 
-		public EndOfStreamException(string message)
-			: base(message)
-		{
-		}
+        public EndOfStreamException(string message)
+            : base(message)
+        {
+        }
 
-		public EndOfStreamException(string message, Exception inner)
-			: base(message, inner)
-		{
-		}
-	}
+        public EndOfStreamException(string message, Exception inner)
+            : base(message, inner)
+        {
+        }
+    }
 }

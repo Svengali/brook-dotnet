@@ -27,24 +27,24 @@ using System;
 
 namespace Piot.Brook
 {
-	public interface IInBitStream
-	{
-		ushort ReadUint16();
+    public interface IInBitStream
+    {
+        ushort ReadUint16();
 
-		short ReadInt16();
+        short ReadInt16();
 
-		uint ReadUint32();
+        uint ReadUint32();
 
-		ulong ReadUint64();
+        ulong ReadUint64();
 
-		byte ReadUint8();
+        byte ReadUint8();
 
-		uint ReadBits(int count);
+        uint ReadBits(int count);
 
-		uint ReadRawBits(int count);
+        uint ReadRawBits(int count);
 
-		int ReadSignedBits(int count);
-		
-		bool IsEof {get;}
-	}
+        int ReadSignedBits(int count);
+
+        bool IsEof { get; }
+    }
 }

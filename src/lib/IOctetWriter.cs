@@ -23,18 +23,18 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
-﻿
+
 namespace Piot.Brook
 {
-	public interface IOctetWriter
-	{
-		void WriteOctet(byte v);
+    public interface IOctetWriter
+    {
+        void WriteOctet(byte v);
 
-		void WriteOctets(byte[] v);
+        void WriteOctets(byte[] v);
 
-		int RemainingOctetCount
-		{
-			get;
-		}
-	}
+        int RemainingOctetCount
+        {
+            get;
+        }
+    }
 }

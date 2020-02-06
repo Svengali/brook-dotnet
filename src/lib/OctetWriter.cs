@@ -23,54 +23,54 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
-﻿
+
 using System;
 
 namespace Piot.Brook
 {
-	public class OctetWriter : IOctetWriter
-	{
-		readonly byte[] data;
-		int position;
+    public class OctetWriter : IOctetWriter
+    {
+        readonly byte[] data;
+        int position;
 
-		public OctetWriter(int size)
-		{
-			data = new byte[size];
-		}
+        public OctetWriter(int size)
+        {
+            data = new byte[size];
+        }
 
-		public void WriteOctet(byte v)
-		{
-			data[position++] = v;
-		}
+        public void WriteOctet(byte v)
+        {
+            data[position++] = v;
+        }
 
-		public byte[] Octets
-		{
-			get
-			{
-				var clone = new byte[position];
-				Array.Copy(data, 0, clone, 0, position);
-				return clone;
-			}
-		}
+        public byte[] Octets
+        {
+            get
+            {
+                var clone = new byte[position];
+                Array.Copy(data, 0, clone, 0, position);
+                return clone;
+            }
+        }
 
-		public void WriteOctets(byte[] v)
-		{
-			if (v.Length > RemainingOctetCount)
-			{
-				throw new Exception("written too far!");
-			}
-			var octetCount = v.Length;
+        public void WriteOctets(byte[] v)
+        {
+            if (v.Length > RemainingOctetCount)
+            {
+                throw new Exception("written too far!");
+            }
+            var octetCount = v.Length;
 
-			Array.Copy(v, 0, data, position, octetCount);
-			position += octetCount;
-		}
+            Array.Copy(v, 0, data, position, octetCount);
+            position += octetCount;
+        }
 
-		public int RemainingOctetCount
-		{
-			get
-			{
-				return data.Length - position;
-			}
-		}
-	}
+        public int RemainingOctetCount
+        {
+            get
+            {
+                return data.Length - position;
+            }
+        }
+    }
 }

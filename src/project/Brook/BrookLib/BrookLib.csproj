@@ -5,7 +5,7 @@
       <RootNamespace></RootNamespace>
       <BaseDirectory>..\..\..\lib</BaseDirectory>
       <PackageId>Brook.Net</PackageId>
-      <Version>1.2.1</Version>
+      <Version>1.2.2</Version>
       <Authors>Piot</Authors>
       <Copyright>Copyright Peter Bjorklund 2018</Copyright>
       <PackageLicense>MIT</PackageLicense>

@@ -25,15 +25,15 @@ SOFTWARE.
 */
 namespace Piot.Brook
 {
-	public interface IOctetReader
-	{
-		byte ReadOctet();
+    public interface IOctetReader
+    {
+        byte ReadOctet();
 
-		byte[] ReadOctets(int octetCount);
+        byte[] ReadOctets(int octetCount);
 
-		int RemainingOctetCount
-		{
-			get;
-		}
-	}
+        int RemainingOctetCount
+        {
+            get;
+        }
+    }
 }

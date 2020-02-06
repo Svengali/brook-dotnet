@@ -27,60 +27,60 @@ using Piot.Brook;
 
 namespace Tests
 {
-	using Xunit;
+    using Xunit;
 
-	public class InOutBitStreamTest
-	{
-		static OutBitStream Setup(out OctetWriter octetWriter)
-		{
-			octetWriter = new OctetWriter(128);
-			var bitStream = new OutBitStream(octetWriter);
+    public class InOutBitStreamTest
+    {
+        static OutBitStream Setup(out OctetWriter octetWriter)
+        {
+            octetWriter = new OctetWriter(128);
+            var bitStream = new OutBitStream(octetWriter);
 
-			return bitStream;
-		}
+            return bitStream;
+        }
 
-		static IInBitStream SetupIn(OctetWriter writer)
-		{
-			var octetReader = new OctetReader(writer.Octets);
-			var bitStream = new InBitStream(null, octetReader, writer.Octets.Length * 8);
+        static IInBitStream SetupIn(OctetWriter writer)
+        {
+            var octetReader = new OctetReader(writer.Octets);
+            var bitStream = new InBitStream(null, octetReader, writer.Octets.Length * 8);
 
-			return bitStream;
-		}
+            return bitStream;
+        }
 
-		[Fact]
-		public static void WriteAndReadSigned16bit()
-		{
-			OctetWriter writer;
-			var outStream = Setup(out writer);
-			var v = (short)-23988;
+        [Fact]
+        public static void WriteAndReadSigned16bit()
+        {
+            OctetWriter writer;
+            var outStream = Setup(out writer);
+            var v = (short)-23988;
 
-			outStream.WriteInt16(v);
-			outStream.Flush();
-			var inStream = SetupIn(writer);
-			var rv = inStream.ReadInt16();
-			Assert.Equal(-23988, rv);
-		}
+            outStream.WriteInt16(v);
+            outStream.Flush();
+            var inStream = SetupIn(writer);
+            var rv = inStream.ReadInt16();
+            Assert.Equal(-23988, rv);
+        }
 
-		[Fact]
-		public static void WriteTwoNumbers()
-		{
-			OctetWriter writer;
-			var outStream = Setup(out writer);
-			const short otherValue = 1234;
-			var v = (short)-23988;
-			var u = otherValue;
+        [Fact]
+        public static void WriteTwoNumbers()
+        {
+            OctetWriter writer;
+            var outStream = Setup(out writer);
+            const short otherValue = 1234;
+            var v = (short)-23988;
+            var u = otherValue;
 
-			outStream.WriteBits(2, 3);
-			outStream.WriteInt16(v);
-			outStream.WriteInt16(u);
-			outStream.Flush();
-			var inStream = SetupIn(writer);
-			var x = inStream.ReadBits(3);
-			Assert.Equal((uint)2, x);
-			var rv = inStream.ReadInt16();
-			Assert.Equal(-23988, rv);
-			var ru = inStream.ReadInt16();
-			Assert.Equal(otherValue, ru);
-		}
-	}
+            outStream.WriteBits(2, 3);
+            outStream.WriteInt16(v);
+            outStream.WriteInt16(u);
+            outStream.Flush();
+            var inStream = SetupIn(writer);
+            var x = inStream.ReadBits(3);
+            Assert.Equal((uint)2, x);
+            var rv = inStream.ReadInt16();
+            Assert.Equal(-23988, rv);
+            var ru = inStream.ReadInt16();
+            Assert.Equal(otherValue, ru);
+        }
+    }
 }

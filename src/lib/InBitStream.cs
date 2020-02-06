@@ -23,164 +23,164 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
-﻿
+
 using System;
 using Piot.Log;
 
 namespace Piot.Brook
 {
-	public class InBitStream : IInBitStream
-	{
-		readonly IOctetReader octetReader;
-		int remainingBits;
-		uint data;
-		int position;
-		readonly int bitSize;
-		readonly ILog log;
+    public class InBitStream : IInBitStream
+    {
+        readonly IOctetReader octetReader;
+        int remainingBits;
+        uint data;
+        int position;
+        readonly int bitSize;
+        readonly ILog log;
 
-		public InBitStream(ILog log, IOctetReader octetReader, int bitSize)
-		{
-			this.log = log;
-			this.octetReader = octetReader;
-			this.bitSize = bitSize;
-		}
+        public InBitStream(ILog log, IOctetReader octetReader, int bitSize)
+        {
+            this.log = log;
+            this.octetReader = octetReader;
+            this.bitSize = bitSize;
+        }
 
-		public ushort ReadUint16()
-		{
-			return (ushort) ReadBits(16);
-		}
+        public ushort ReadUint16()
+        {
+            return (ushort)ReadBits(16);
+        }
 
-		public int ReadSignedBits(int count)
-		{
-			var sign = ReadBits(1);
-			var v = (int)ReadBits(count - 1);
+        public int ReadSignedBits(int count)
+        {
+            var sign = ReadBits(1);
+            var v = (int)ReadBits(count - 1);
 
-			if (sign != 0)
-			{
-				v = -v;
-			}
+            if (sign != 0)
+            {
+                v = -v;
+            }
 
-			return v;
-		}
+            return v;
+        }
 
-		public bool IsEof => position == bitSize;
+        public bool IsEof => position == bitSize;
 
-		public short ReadInt16()
-		{
-			return (short)ReadSignedBits(16);
-		}
+        public short ReadInt16()
+        {
+            return (short)ReadSignedBits(16);
+        }
 
-		public uint ReadUint32()
-		{
-			return ReadBits(32);
-		}
+        public uint ReadUint32()
+        {
+            return ReadBits(32);
+        }
 
-		public ulong ReadUint64()
-		{
-			var upper = (ulong)ReadRawBits(32);
-			var result = upper << 32;
-			var lower = (ulong)ReadRawBits(32);
+        public ulong ReadUint64()
+        {
+            var upper = (ulong)ReadRawBits(32);
+            var result = upper << 32;
+            var lower = (ulong)ReadRawBits(32);
 
-			result |= lower;
+            result |= lower;
 
-			return result;
-		}
+            return result;
+        }
 
-		public byte ReadUint8()
-		{
-			return (byte) ReadBits(8);
-		}
+        public byte ReadUint8()
+        {
+            return (byte)ReadBits(8);
+        }
 
-		uint MaskFromCount(int count)
-		{
-			if (count == 32)
-			{
-				return 0xffffffff;
-			}
-			return ((uint)1 << count) - 1;
-		}
+        uint MaskFromCount(int count)
+        {
+            if (count == 32)
+            {
+                return 0xffffffff;
+            }
+            return ((uint)1 << count) - 1;
+        }
 
-		uint ReadOnce(int bitsToRead)
-		{
-			if (bitsToRead == 0)
-			{
-				return 0;
-			}
+        uint ReadOnce(int bitsToRead)
+        {
+            if (bitsToRead == 0)
+            {
+                return 0;
+            }
 
-			if (bitsToRead > remainingBits)
-			{
-				throw new EndOfStreamException(bitsToRead, remainingBits);
-			}
-			var mask = MaskFromCount(bitsToRead);
-			var shiftPos = (remainingBits - bitsToRead);
+            if (bitsToRead > remainingBits)
+            {
+                throw new EndOfStreamException(bitsToRead, remainingBits);
+            }
+            var mask = MaskFromCount(bitsToRead);
+            var shiftPos = (remainingBits - bitsToRead);
 
-			if (position + bitsToRead > bitSize)
-			{
-				var s = $"Position:{position} bitsToRead:{bitsToRead} bitSize:{bitSize}";
-				log.Warning(s);
-				throw new EndOfStreamException(s);
-			}
-			position += bitsToRead;
+            if (position + bitsToRead > bitSize)
+            {
+                var s = $"Position:{position} bitsToRead:{bitsToRead} bitSize:{bitSize}";
+                log.Warning(s);
+                throw new EndOfStreamException(s);
+            }
+            position += bitsToRead;
 
-			var bits = (uint)0;
+            var bits = (uint)0;
 
-			if (shiftPos < 32)
-			{
-				bits = (data >> shiftPos) & mask;
-			}
-			// Console.Error.WriteLine("READ mask {0:X} shift:{1} bits:{2:X} data:{3:X} {4:X}", mask, shiftPos, bits, data, (data >> shiftPos));
-			remainingBits -= bitsToRead;
-			return bits;
-		}
+            if (shiftPos < 32)
+            {
+                bits = (data >> shiftPos) & mask;
+            }
+            // Console.Error.WriteLine("READ mask {0:X} shift:{1} bits:{2:X} data:{3:X} {4:X}", mask, shiftPos, bits, data, (data >> shiftPos));
+            remainingBits -= bitsToRead;
+            return bits;
+        }
 
-		void Fill()
-		{
-			var octetsToRead = 4;
+        void Fill()
+        {
+            var octetsToRead = 4;
 
-			if (octetsToRead > octetReader.RemainingOctetCount)
-			{
-				octetsToRead = octetReader.RemainingOctetCount;
-			}
+            if (octetsToRead > octetReader.RemainingOctetCount)
+            {
+                octetsToRead = octetReader.RemainingOctetCount;
+            }
 
-			var newData = (uint)0;
-			for (var i = 0; i < octetsToRead; ++i)
-			{
-				newData <<= 8;
-				var octet = octetReader.ReadOctet();
-				newData |= (uint)octet;
-			}
+            var newData = (uint)0;
+            for (var i = 0; i < octetsToRead; ++i)
+            {
+                newData <<= 8;
+                var octet = octetReader.ReadOctet();
+                newData |= (uint)octet;
+            }
 
-			data = newData;
-			remainingBits = octetsToRead * 8;
-			// Console.Error.WriteLine("Data is now {0:X} octetsToRead:{1} Remaining:{2}", data, octetsToRead, remainingBits);
-		}
+            data = newData;
+            remainingBits = octetsToRead * 8;
+            // Console.Error.WriteLine("Data is now {0:X} octetsToRead:{1} Remaining:{2}", data, octetsToRead, remainingBits);
+        }
 
-		public uint ReadBits(int count)
-		{
-			if (count > 32)
-			{
-				throw new Exception("Max 32 bits to read");
-			}
+        public uint ReadBits(int count)
+        {
+            if (count > 32)
+            {
+                throw new Exception("Max 32 bits to read");
+            }
 
-			if (count > remainingBits)
-			{
-				var secondCount = count - remainingBits;
-				var v = ReadOnce(remainingBits);
-				Fill();
+            if (count > remainingBits)
+            {
+                var secondCount = count - remainingBits;
+                var v = ReadOnce(remainingBits);
+                Fill();
 
-				v <<= secondCount;
-				v |= ReadOnce(secondCount);
-				return v;
-			}
-			else
-			{
-				return ReadOnce(count);
-			}
-		}
+                v <<= secondCount;
+                v |= ReadOnce(secondCount);
+                return v;
+            }
+            else
+            {
+                return ReadOnce(count);
+            }
+        }
 
-		public uint ReadRawBits(int count)
-		{
-			return ReadBits(count);
-		}
-	}
+        public uint ReadRawBits(int count)
+        {
+            return ReadBits(count);
+        }
+    }
 }

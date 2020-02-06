@@ -23,62 +23,62 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
-﻿ using System;
+using System;
 using System.IO;
 using Piot.Brook.Shared;
 
 namespace Piot.Brook.Octet
 {
-	public class OutOctetStream : IOutOctetStream
-	{
-		BinaryWriter writer;
-		MemoryStream memoryStream;
+    public class OutOctetStream : IOutOctetStream
+    {
+        BinaryWriter writer;
+        MemoryStream memoryStream;
 
-		public OutOctetStream()
-		{
-			memoryStream = new MemoryStream();
-			writer = new BinaryWriter(memoryStream);
-		}
+        public OutOctetStream()
+        {
+            memoryStream = new MemoryStream();
+            writer = new BinaryWriter(memoryStream);
+        }
 
-		public void WriteUint16(ushort data)
-		{
-			Write(EndianConverter.Uint16ToBytes(data));
-		}
+        public void WriteUint16(ushort data)
+        {
+            Write(EndianConverter.Uint16ToBytes(data));
+        }
 
-		public void WriteUint32(uint data)
-		{
-			Write(EndianConverter.Uint32ToBytes(data));
-		}
+        public void WriteUint32(uint data)
+        {
+            Write(EndianConverter.Uint32ToBytes(data));
+        }
 
-		public void WriteUint64(ulong data)
-		{
-			Write(EndianConverter.Uint64ToBytes(data));
-		}
+        public void WriteUint64(ulong data)
+        {
+            Write(EndianConverter.Uint64ToBytes(data));
+        }
 
-		public void WriteUint8(byte data)
-		{
-			writer.Write(data);
-		}
+        public void WriteUint8(byte data)
+        {
+            writer.Write(data);
+        }
 
-		public void Write(byte[] data)
-		{
-			writer.Write(data);
-		}
+        public void Write(byte[] data)
+        {
+            writer.Write(data);
+        }
 
-		public void WriteOctets(byte[] data)
-		{
-			writer.Write(data);
-		}
+        public void WriteOctets(byte[] data)
+        {
+            writer.Write(data);
+        }
 
-		public byte[] Close()
-		{
-			var writeBuf = memoryStream.GetBuffer();
-			var octetsWritten = (int)memoryStream.Length;
-			var bufferToReturn = new byte[octetsWritten];
+        public byte[] Close()
+        {
+            var writeBuf = memoryStream.GetBuffer();
+            var octetsWritten = (int)memoryStream.Length;
+            var bufferToReturn = new byte[octetsWritten];
 
-			Buffer.BlockCopy(writeBuf, 0, bufferToReturn, 0, octetsWritten);
+            Buffer.BlockCopy(writeBuf, 0, bufferToReturn, 0, octetsWritten);
 
-			return bufferToReturn;
-		}
-	}
+            return bufferToReturn;
+        }
+    }
 }

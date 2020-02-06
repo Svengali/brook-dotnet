@@ -27,40 +27,40 @@ using System;
 
 namespace Piot.Brook
 {
-	public class OctetReader : IOctetReader
-	{
-		byte[] data;
-		int position;
+    public class OctetReader : IOctetReader
+    {
+        byte[] data;
+        int position;
 
-		public OctetReader(byte[] array)
-		{
-			data = array;
-		}
+        public OctetReader(byte[] array)
+        {
+            data = array;
+        }
 
-		public byte ReadOctet()
-		{
-			return data[position++];
-		}
+        public byte ReadOctet()
+        {
+            return data[position++];
+        }
 
-		public byte[] ReadOctets(int octetCount)
-		{
-			if (octetCount > RemainingOctetCount)
-			{
-				throw new Exception("Read too far!");
-			}
+        public byte[] ReadOctets(int octetCount)
+        {
+            if (octetCount > RemainingOctetCount)
+            {
+                throw new Exception("Read too far!");
+            }
 
-			byte[] result = new byte[octetCount];
-			Array.Copy(data, position, result, 0, octetCount);
-			position += octetCount;
-			return result;
-		}
+            byte[] result = new byte[octetCount];
+            Array.Copy(data, position, result, 0, octetCount);
+            position += octetCount;
+            return result;
+        }
 
-		public int RemainingOctetCount
-		{
-			get
-			{
-				return data.Length - position;
-			}
-		}
-	}
+        public int RemainingOctetCount
+        {
+            get
+            {
+                return data.Length - position;
+            }
+        }
+    }
 }
