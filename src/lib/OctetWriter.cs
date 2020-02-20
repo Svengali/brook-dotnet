@@ -57,7 +57,7 @@ namespace Piot.Brook
         {
             if (v.Length > RemainingOctetCount)
             {
-                throw new Exception("written too far!");
+                throw new Exception($"written too far. Wanted to write {v.Length} octets, but only {RemainingOctetCount} remains. (buffer size: {data.Length})");
             }
             var octetCount = v.Length;
 
