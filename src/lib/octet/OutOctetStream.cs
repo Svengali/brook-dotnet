@@ -65,10 +65,17 @@ namespace Piot.Brook.Octet
             writer.Write(data);
         }
 
+        public void WriteOctet(byte v)
+        {
+            WriteUint8(v);
+        }
+
         public void WriteOctets(byte[] data)
         {
             writer.Write(data);
         }
+
+        public int RemainingOctetCount { get; }
 
         public byte[] Close()
         {

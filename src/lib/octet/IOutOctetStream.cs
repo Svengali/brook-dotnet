@@ -25,7 +25,7 @@ SOFTWARE.
 */
 namespace Piot.Brook
 {
-    public interface IOutOctetStream
+    public interface IOutOctetStream : IOctetWriter
     {
         void WriteUint8(byte a);
 
