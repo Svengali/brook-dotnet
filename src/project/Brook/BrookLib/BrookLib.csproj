@@ -1,88 +1,88 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-      <TargetFramework>netstandard2.0</TargetFramework>
-      <RootNamespace></RootNamespace>
-      <BaseDirectory>..\..\..\lib</BaseDirectory>
-      <PackageId>Brook.Net</PackageId>
-      <Version>1.2.3</Version>
-      <Authors>Piot</Authors>
-      <Copyright>Copyright Peter Bjorklund 2018</Copyright>
-      <PackageLicense>MIT</PackageLicense>
-      <PackageProjectUrl>https://github.com/Piot/brook-dotnet</PackageProjectUrl>
-      <RepositoryUrl>https://github.com/piot/brook-dotnet.git</RepositoryUrl>
-      <PackageIconUrl></PackageIconUrl>
-      <PackageReleaseNotes></PackageReleaseNotes>
-      <PackageTags></PackageTags>
-      <IncludeSymbols>true</IncludeSymbols>
-      <Description>Bitstreams</Description>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace></RootNamespace>
+    <BaseDirectory>..\..\..\lib</BaseDirectory>
+    <PackageId>Brook.Net</PackageId>
+    <Version>1.2.4</Version>
+    <Authors>Piot</Authors>
+    <Copyright>Copyright Peter Bjorklund 2018</Copyright>
+    <PackageLicense>MIT</PackageLicense>
+    <PackageProjectUrl>https://github.com/Piot/brook-dotnet</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/piot/brook-dotnet.git</RepositoryUrl>
+    <PackageIconUrl></PackageIconUrl>
+    <PackageReleaseNotes></PackageReleaseNotes>
+    <PackageTags></PackageTags>
+    <IncludeSymbols>true</IncludeSymbols>
+    <Description>Bitstreams</Description>
+  </PropertyGroup>
 
-    <ItemGroup>
-      <Compile Include="../../../lib/DebugInBitStream.cs">
-        <Link>DebugInBitStream.cs</Link>
-      </Compile>
-      <Compile Include="../../../lib/DebugOutBitStream.cs">
-        <Link>DebugOutBitStream.cs</Link>
-      </Compile>
-      <Compile Include="../../../lib/DebugStreamTypes.cs">
-        <Link>DebugStreamTypes.cs</Link>
-      </Compile>
-      <Compile Include="../../../lib/EndOfStreamException.cs">
-        <Link>EndOfStreamException.cs</Link>
-      </Compile>
-      <Compile Include="../../../lib/IInBitStream.cs">
-        <Link>IInBitStream.cs</Link>
-      </Compile>
-      <Compile Include="../../../lib/IOctetReader.cs">
-        <Link>IOctetReader.cs</Link>
-      </Compile>
-      <Compile Include="../../../lib/IOctetWriter.cs">
-        <Link>IOctetWriter.cs</Link>
-      </Compile>
-      <Compile Include="../../../lib/IOutBitStream.cs">
-        <Link>IOutBitStream.cs</Link>
-      </Compile>
-      <Compile Include="../../../lib/InBitStream.cs">
-        <Link>InBitStream.cs</Link>
-      </Compile>
-      <Compile Include="../../../lib/OctetReader.cs">
-        <Link>OctetReader.cs</Link>
-      </Compile>
-      <Compile Include="../../../lib/OctetWriter.cs">
-        <Link>OctetWriter.cs</Link>
-      </Compile>
-      <Compile Include="../../../lib/OutBitStream.cs">
-        <Link>OutBitStream.cs</Link>
-      </Compile>
-      <Compile Include="../../../lib/octet/EndianConverter.cs">
-        <Link>octet/EndianConverter.cs</Link>
-      </Compile>
-      <Compile Include="../../../lib/octet/IInOctetStream.cs">
-        <Link>octet/IInOctetStream.cs</Link>
-      </Compile>
-      <Compile Include="../../../lib/octet/IOutOctetStream.cs">
-        <Link>octet/IOutOctetStream.cs</Link>
-      </Compile>
-      <Compile Include="../../../lib/octet/InOctetStream.cs">
-        <Link>octet/InOctetStream.cs</Link>
-      </Compile>
-      <Compile Include="../../../lib/octet/OctetQueue.cs">
-        <Link>octet/OctetQueue.cs</Link>
-      </Compile>
-      <Compile Include="../../../lib/octet/OutOctetStream.cs">
-        <Link>octet/OutOctetStream.cs</Link>
-      </Compile>
-    </ItemGroup>
+  <ItemGroup>
+    <Compile Include="../../../lib/DebugInBitStream.cs">
+      <Link>DebugInBitStream.cs</Link>
+    </Compile>
+    <Compile Include="../../../lib/DebugOutBitStream.cs">
+      <Link>DebugOutBitStream.cs</Link>
+    </Compile>
+    <Compile Include="../../../lib/DebugStreamTypes.cs">
+      <Link>DebugStreamTypes.cs</Link>
+    </Compile>
+    <Compile Include="../../../lib/EndOfStreamException.cs">
+      <Link>EndOfStreamException.cs</Link>
+    </Compile>
+    <Compile Include="../../../lib/IInBitStream.cs">
+      <Link>IInBitStream.cs</Link>
+    </Compile>
+    <Compile Include="../../../lib/IOctetReader.cs">
+      <Link>IOctetReader.cs</Link>
+    </Compile>
+    <Compile Include="../../../lib/IOctetWriter.cs">
+      <Link>IOctetWriter.cs</Link>
+    </Compile>
+    <Compile Include="../../../lib/IOutBitStream.cs">
+      <Link>IOutBitStream.cs</Link>
+    </Compile>
+    <Compile Include="../../../lib/InBitStream.cs">
+      <Link>InBitStream.cs</Link>
+    </Compile>
+    <Compile Include="../../../lib/OctetReader.cs">
+      <Link>OctetReader.cs</Link>
+    </Compile>
+    <Compile Include="../../../lib/OctetWriter.cs">
+      <Link>OctetWriter.cs</Link>
+    </Compile>
+    <Compile Include="../../../lib/OutBitStream.cs">
+      <Link>OutBitStream.cs</Link>
+    </Compile>
+    <Compile Include="../../../lib/octet/EndianConverter.cs">
+      <Link>octet/EndianConverter.cs</Link>
+    </Compile>
+    <Compile Include="../../../lib/octet/IInOctetStream.cs">
+      <Link>octet/IInOctetStream.cs</Link>
+    </Compile>
+    <Compile Include="../../../lib/octet/IOutOctetStream.cs">
+      <Link>octet/IOutOctetStream.cs</Link>
+    </Compile>
+    <Compile Include="../../../lib/octet/InOctetStream.cs">
+      <Link>octet/InOctetStream.cs</Link>
+    </Compile>
+    <Compile Include="../../../lib/octet/OctetQueue.cs">
+      <Link>octet/OctetQueue.cs</Link>
+    </Compile>
+    <Compile Include="../../../lib/octet/OutOctetStream.cs">
+      <Link>octet/OutOctetStream.cs</Link>
+    </Compile>
+  </ItemGroup>
 
-    <ItemGroup>
-      <PackageReference Include="Clog" Version="2.0.1" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Clog" Version="2.0.1" />
+  </ItemGroup>
 
-    <ItemGroup>
-    </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
 
-    <ItemGroup>
-    </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
 
 </Project>
