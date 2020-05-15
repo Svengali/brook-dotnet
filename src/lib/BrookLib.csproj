@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace></RootNamespace>
+    <BaseDirectory>..\..\..\lib</BaseDirectory>
+    <PackageId>Brook.Net</PackageId>
+    <Version>0.0.0</Version>
+    <Authors>Piot</Authors>
+    <Copyright>Copyright Peter Bjorklund 2018</Copyright>
+    <PackageLicense>MIT</PackageLicense>
+    <PackageProjectUrl>https://github.com/Piot/brook-dotnet</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/piot/brook-dotnet.git</RepositoryUrl>
+    <PackageIconUrl></PackageIconUrl>
+    <PackageReleaseNotes></PackageReleaseNotes>
+    <PackageTags></PackageTags>
+    <IncludeSymbols>true</IncludeSymbols>
+    <Description>Bitstreams</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Clog" Version="2.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+  </ItemGroup>
+
+  <ItemGroup>
+  </ItemGroup>
+
+</Project>

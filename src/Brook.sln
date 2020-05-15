@@ -1,9 +1,9 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrookLib", "BrookLib\BrookLib.csproj", "{DCFFCB81-BAAB-43FE-B6CE-D0628EAD5C7D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrookLib", "lib\BrookLib.csproj", "{DCFFCB81-BAAB-43FE-B6CE-D0628EAD5C7D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrookTests", "BrookTests\BrookTests.csproj", "{BCAA7CFF-4638-4FB0-BC63-4BD22D8F3822}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrookTests", "tests\BrookTests.csproj", "{BCAA7CFF-4638-4FB0-BC63-4BD22D8F3822}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
