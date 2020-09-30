@@ -9,13 +9,14 @@
     <Authors>Piot</Authors>
     <Copyright>Copyright Peter Bjorklund 2018</Copyright>
     <PackageLicense>MIT</PackageLicense>
-    <PackageProjectUrl>https://github.com/Piot/brook-dotnet</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/piot/brook-dotnet.git</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/coherence/brook-dotnet</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/coherence/brook-dotnet.git</RepositoryUrl>
     <PackageIconUrl></PackageIconUrl>
     <PackageReleaseNotes></PackageReleaseNotes>
     <PackageTags></PackageTags>
     <IncludeSymbols>true</IncludeSymbols>
     <Description>Bitstreams</Description>
+    <Company>Coherence</Company>
   </PropertyGroup>
 
   <ItemGroup>
