@@ -75,6 +75,14 @@ namespace Piot.Brook
             bitStream.WriteFromStream(inBitStream, bitCount);
         }
 
+        public uint RemainingBitCount
+        {
+            get
+            {
+                return bitStream.RemainingBitCount;
+            }
+        }
+
         public uint Tell
         {
             get
