@@ -75,6 +75,7 @@ namespace Piot.Brook.Octet
             writer.Write(data);
         }
 
+        public int Length { get; }
         public int RemainingOctetCount { get; }
 
         public byte[] Close()

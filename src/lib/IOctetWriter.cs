@@ -32,6 +32,11 @@ namespace Piot.Brook
 
         void WriteOctets(byte[] v);
 
+        int Length
+        {
+            get;
+        }
+
         int RemainingOctetCount
         {
             get;

@@ -53,5 +53,10 @@ namespace Piot.Brook
         void WriteFromStream(IInBitStream inBitStream, int bitCount);
 
         void Flush();
+
+        uint RemainingBitCount
+        {
+            get;
+        }
     }
 }

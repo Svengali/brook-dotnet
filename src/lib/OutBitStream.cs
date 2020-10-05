@@ -89,6 +89,14 @@ namespace Piot.Brook
             WriteLast();
         }
 
+        public uint RemainingBitCount
+        {
+            get
+            {
+                return (uint)(octetWriter.Length * 8) - position;
+            }
+        }
+
         uint MaskFromCount(int count)
         {
             return ((uint)1 << count) - 1;
