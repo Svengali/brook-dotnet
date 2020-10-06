@@ -65,19 +65,27 @@ namespace Piot.Brook
             position += octetCount;
         }
 
-        public int Length
+        public uint Tell
         {
             get
             {
-                return data.Length;
+                return (uint)position;
             }
         }
 
-        public int RemainingOctetCount
+        public uint Length
         {
             get
             {
-                return data.Length - position;
+                return (uint)data.Length;
+            }
+        }
+
+        public uint RemainingOctetCount
+        {
+            get
+            {
+                return Length - Tell;
             }
         }
     }
