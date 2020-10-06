@@ -65,6 +65,7 @@ namespace Piot.Brook
             position += octetCount;
         }
 
+
         public uint Tell
         {
             get
