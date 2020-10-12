@@ -29,8 +29,10 @@ namespace Piot.Brook
 {
     public class OutBitStream : IOutBitStream
     {
+        const int AccumulatorSize = 32;
+
         IOctetWriter octetWriter;
-        int remainingBits = 32;
+        int remainingBits = AccumulatorSize;
         uint ac;
         uint position;
 
@@ -67,7 +69,7 @@ namespace Piot.Brook
 
         public void WriteFromStream(IInBitStream inBitStream, int bitCount)
         {
-            const int ChunkBitSize = 32;
+            const int ChunkBitSize = AccumulatorSize;
             var restBitCount = bitCount % ChunkBitSize;
             var chunkCount = bitCount / ChunkBitSize;
 
@@ -123,6 +125,31 @@ namespace Piot.Brook
             }
         }
 
+        public void Rewind(uint newPosition)
+        {
+            if (newPosition > position)
+            {
+                throw new ArgumentOutOfRangeException("Can't rewind forwards.");
+            }
+            else if (newPosition < position)
+            {
+                WriteLast();
+
+                var leftOverBits = newPosition % 8;
+                var octets = newPosition / 8;
+                octets = Math.Min(octets, (uint)octetWriter.Octets.Length - 1);
+                if (leftOverBits > 0)
+                {
+                    remainingBits = AccumulatorSize - (int)leftOverBits;
+                    uint bits = octetWriter.Octets[octets];
+                    var mask = ~MaskFromCount(remainingBits);
+                    ac = (bits << AccumulatorSize - 8) & mask;
+                }
+                octetWriter.Rewind(octets);
+                position = newPosition;
+            }
+        }
+
         void WriteRest(uint v, int count, int bitsToKeepFromLeft)
         {
             var ov = v;
@@ -159,24 +186,27 @@ namespace Piot.Brook
 
             octetWriter.WriteOctets(octets);
             ac = 0;
-            remainingBits = 32;
+            remainingBits = AccumulatorSize;
         }
 
         void WriteLast()
         {
-            if (remainingBits == 32)
+            if (remainingBits == AccumulatorSize)
             {
                 return;
             }
 
-            var bitsWritten = 32 - remainingBits;
+            var bitsWritten = AccumulatorSize - remainingBits;
             var octetCount = ((bitsWritten - 1) / 8) + 1;
-            for (var i = 0; i < octetCount; i++)
+            for (var i = 0; i < octetCount && octetWriter.RemainingOctetCount > 0; i++)
             {
                 var outOctet = (byte)((ac & 0xff000000) >> 24);
                 ac <<= 8;
                 octetWriter.WriteOctet(outOctet);
             }
+
+            ac = 0;
+            remainingBits = AccumulatorSize;
         }
 
         public void WriteSignedBits(int v, int count)
@@ -193,9 +223,14 @@ namespace Piot.Brook
 
         public void WriteBits(uint v, int count)
         {
-            if (count > 32)
+            if (count > AccumulatorSize)
             {
-                throw new Exception("Max 32 bits to write ");
+                throw new Exception($"Max {AccumulatorSize} bits to write ");
+            }
+
+            if (count > RemainingBitCount)
+            {
+                throw new Exception($"Attempting to write too many bits. {count} > {RemainingBitCount} ");
             }
 
             if (count > remainingBits)

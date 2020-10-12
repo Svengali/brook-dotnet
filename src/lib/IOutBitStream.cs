@@ -45,14 +45,16 @@ namespace Piot.Brook
 
         void WriteSignedBits(int value, int count);
 
+        void WriteFromStream(IInBitStream inBitStream, int bitCount);
+
+        void Rewind(uint newPosition);
+
+        void Flush();
+
         uint Tell
         {
             get;
         }
-
-        void WriteFromStream(IInBitStream inBitStream, int bitCount);
-
-        void Flush();
 
         uint RemainingBitCount
         {

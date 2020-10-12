@@ -75,6 +75,11 @@ namespace Piot.Brook
             bitStream.WriteFromStream(inBitStream, bitCount);
         }
 
+        public void Rewind(uint newPosition)
+        {
+            bitStream.Rewind(newPosition);
+        }
+
         public uint RemainingBitCount
         {
             get

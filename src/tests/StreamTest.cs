@@ -82,5 +82,169 @@ namespace Tests
             var ru = inStream.ReadInt16();
             Assert.Equal(otherValue, ru);
         }
+
+        [Fact]
+        public static void WriteSomeNumbersThenRewind()
+        {
+            OctetWriter writer;
+            var outStream = Setup(out writer);
+
+            outStream.WriteBits(2, 3);
+            outStream.WriteBits(7, 4);
+            var position = outStream.Tell;
+            outStream.WriteInt16(-69);
+            outStream.Rewind(position);
+            Assert.Equal(position, outStream.Tell);
+            outStream.Flush();
+
+            Assert.Equal(position, outStream.Tell);
+            var inStream = SetupIn(writer);
+            var x = inStream.ReadBits(3);
+            Assert.Equal((uint)2, x);
+            var y = inStream.ReadBits(4);
+            Assert.Equal((uint)7, y);
+        }
+
+        [Fact]
+        public static void WriteSomeNumbersThenRewindThenMoreNumbers()
+        {
+            OctetWriter writer;
+            var outStream = Setup(out writer);
+
+            outStream.WriteBits(2, 3);
+            outStream.WriteBits(7, 4);
+            var position = outStream.Tell;
+            outStream.WriteInt16(-69); //Throw away
+            outStream.Rewind(position);
+            Assert.Equal(position, outStream.Tell);
+            outStream.WriteInt16(45);
+            outStream.WriteUint32(69696969);
+            outStream.Flush();
+
+            var inStream = SetupIn(writer);
+            var x = inStream.ReadBits(3);
+            Assert.Equal((uint)2, x);
+            var y = inStream.ReadBits(4);
+            Assert.Equal((uint)7, y);
+            var z = inStream.ReadInt16();
+            Assert.Equal(45, z);
+            var zz = inStream.ReadUint32();
+            Assert.Equal((uint)69696969, zz);
+        }
+
+        [Fact]
+        public static void WriteSomeNumbersThenRewindPartWay()
+        {
+            OctetWriter writer;
+            var outStream = Setup(out writer);
+
+            outStream.WriteBits(2, 3);
+            outStream.WriteBits(7, 3);
+            outStream.WriteInt16(-69);
+            outStream.WriteInt16(45);
+            outStream.WriteUint32(69696969);
+            var position = outStream.Tell;
+            outStream.WriteInt16(-17);
+            outStream.WriteUint32(123345);
+            outStream.Rewind(position);
+            outStream.Flush();
+
+            var inStream = SetupIn(writer);
+            var a = inStream.ReadBits(3);
+            Assert.Equal((uint)2, a);
+            var b = inStream.ReadBits(3);
+            Assert.Equal((uint)7, b);
+            var c = inStream.ReadInt16();
+            Assert.Equal(-69, c);
+            var d = inStream.ReadInt16();
+            Assert.Equal(45, d);
+            var e = inStream.ReadUint32();
+            Assert.Equal((uint)69696969, e);
+        }
+
+        [Fact]
+        public static void WriteRandomNumbersRewindThenKnownNumbers()
+        {
+            OctetWriter writer;
+            var outStream = Setup(out writer);
+            var rand = new System.Random();
+
+            for (int i = 0; i < 50; i++)
+            {
+                var kind = rand.Next();
+                switch (kind % 5)
+                {
+                    case 0: outStream.WriteBits(5, 5); break;
+                    case 1: outStream.WriteInt16(-69); break;
+                    case 2: outStream.WriteUint16(1234); break;
+                    case 3: outStream.WriteUint8(69); break;
+                    default: break;
+                }
+            }
+
+            outStream.Rewind(0);
+
+            outStream.WriteBits(2, 3);
+            outStream.WriteBits(7, 3);
+            outStream.WriteInt16(-69);
+            outStream.Flush();
+
+            var inStream = SetupIn(writer);
+            var a = inStream.ReadBits(3);
+            Assert.Equal((uint)2, a);
+            var b = inStream.ReadBits(3);
+            Assert.Equal((uint)7, b);
+            var c = inStream.ReadInt16();
+            Assert.Equal(-69, c);
+        }
+
+        [Fact]
+        public static void WriteNumbersThenRandomNumbersRewindThenKnownNumbers()
+        {
+            OctetWriter writer;
+            var outStream = Setup(out writer);
+            var rand = new System.Random();
+
+            outStream.WriteBits(2, 3);
+            outStream.WriteBits(7, 3);
+            outStream.WriteInt16(-69);
+
+            var position = outStream.Tell;
+
+            for (int i = 0; i < 50; i++)
+            {
+                var kind = rand.Next();
+                switch (kind % 5)
+                {
+                    case 0: outStream.WriteBits(5, 5); break;
+                    case 1: outStream.WriteInt16(-69); break;
+                    case 2: outStream.WriteUint16(1234); break;
+                    case 3: outStream.WriteUint8(69); break;
+                    default: break;
+                }
+            }
+
+            outStream.Rewind(position);
+
+            outStream.WriteBits(4, 3);
+            outStream.WriteBits(5, 3);
+            outStream.WriteInt16(45);
+            outStream.Flush();
+
+            var inStream = SetupIn(writer);
+            var a = inStream.ReadBits(3);
+            Assert.Equal((uint)2, a);
+            var b = inStream.ReadBits(3);
+            Assert.Equal((uint)7, b);
+            var c = inStream.ReadInt16();
+            Assert.Equal(-69, c);
+
+            var d = inStream.ReadBits(3);
+            Assert.Equal((uint)4, d);
+            var e = inStream.ReadBits(3);
+            Assert.Equal((uint)5, e);
+            var f = inStream.ReadInt16();
+            Assert.Equal(45, f);
+        }
     }
 }

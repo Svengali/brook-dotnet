@@ -32,6 +32,13 @@ namespace Piot.Brook
 
         void WriteOctets(byte[] v);
 
+        void Rewind(uint newPosition);
+
+        byte[] Octets
+        {
+            get;
+        }
+
         uint Tell
         {
             get;

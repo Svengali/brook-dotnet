@@ -75,6 +75,19 @@ namespace Piot.Brook.Octet
             writer.Write(data);
         }
 
+        public void Rewind(uint newPosition)
+        {
+            memoryStream.Position = newPosition;
+        }
+
+        public byte[] Octets
+        {
+            get
+            {
+                return memoryStream.GetBuffer();
+            }
+        }
+
         public uint Length { get { return (uint)memoryStream.Length; } }
         public uint Tell { get { return (uint)memoryStream.Position; } }
         public uint RemainingOctetCount { get { return Length - Tell; } }

@@ -65,6 +65,17 @@ namespace Piot.Brook
             position += octetCount;
         }
 
+        public void Rewind(uint newPosition)
+        {
+            if (newPosition < position)
+            {
+                position = (int)newPosition;
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException($"Rewind new position {newPosition} must be less than current position {position}");
+            }
+        }
 
         public uint Tell
         {
