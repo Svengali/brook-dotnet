@@ -1,4 +1,4 @@
-name: CSharp
+name: Build
 on: [push]
 jobs:
   build:
@@ -6,18 +6,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@master
+        uses: actions/checkout@v2
 
       - name: Install dotnet core
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: "3.1.202"
 
-      - name: Setup dotnet format
-        uses: piot/action-setup-dotnet-format@master
-
       - name: Lint using dotnet format
-        uses: piot/action-dotnet-format-check@master
+        uses: coherence/action-dotnet-format-check@v1
 
       - name: Build dotnet project
         run: dotnet build src/

@@ -5,12 +5,12 @@ on:
 
 name: Upload nuget package
 jobs:
-  build:
+  release:
     name: Create and Upload
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@master
+        uses: actions/checkout@v2
 
       - name: Install dotnet core
         uses: actions/setup-dotnet@v1
@@ -19,13 +19,10 @@ jobs:
 
       - name: Fetch version
         id: fetchver
-        uses: piot/action-version-from-tag@master
-
-      - name: Setup nuget
-        uses: piot/action-setup-nuget@master
+        uses: coherence/action-version-from-tag@v1
 
       - name: Pack specific version
-        uses: piot/action-nuget-pack-push@master
+        uses: coherence/action-nuget-pack-push@v1
         with:
           nuget-api-key: ${{ secrets.NUGET_API_KEY }}
           workspace: src/lib/
