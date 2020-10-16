@@ -2,9 +2,9 @@
 
 Reads and writes octet- and bitstreams.
 
-For a Go version, check out [Brook-Go](https://github.com/Piot/brook-go).
+For a Go version, check out [Brook-Go](https://github.com/coherence/brook-go).
 
-It uses [log-dotnet](https://github.com/Piot/log-dotnet) for logging.
+It uses [log-dotnet](https://github.com/coherence/log-dotnet) for logging.
 
 ##### Usage
 
