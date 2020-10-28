@@ -84,6 +84,34 @@ namespace Tests
         }
 
         [Fact]
+        public static void WriteExactly32BitsInPiecesThenExactly32bitsMoreInOne()
+        {
+            OctetWriter writer;
+            var outStream = Setup(out writer);
+            const short otherValue = 1234;
+            var v = (uint)69696969;
+            var u = otherValue;
+
+            outStream.WriteBits(6, 7);
+            outStream.WriteBits(7, 5);
+            outStream.WriteBits(12, 5);
+            outStream.WriteBits(12, 5);
+            outStream.WriteBits(690, 10);
+            outStream.WriteUint32(v);
+            outStream.WriteInt16(u);
+            outStream.Flush();
+
+            var inStream = SetupIn(writer);
+            Assert.Equal((uint)6, inStream.ReadBits(7));
+            Assert.Equal((uint)7, inStream.ReadBits(5));
+            Assert.Equal((uint)12, inStream.ReadBits(5));
+            Assert.Equal((uint)12, inStream.ReadBits(5));
+            Assert.Equal((uint)690, inStream.ReadBits(10));
+            Assert.Equal((uint)69696969, inStream.ReadUint32());
+            Assert.Equal(otherValue, inStream.ReadInt16());
+        }
+
+        [Fact]
         public static void WriteSomeNumbersThenRewind()
         {
             OctetWriter writer;

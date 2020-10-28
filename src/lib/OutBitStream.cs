@@ -30,6 +30,7 @@ namespace Piot.Brook
     public class OutBitStream : IOutBitStream
     {
         const int AccumulatorSize = 32;
+        const uint MaxFilter = 0xffffffff;
 
         IOctetWriter octetWriter;
         int remainingBits = AccumulatorSize;
@@ -101,7 +102,14 @@ namespace Piot.Brook
 
         uint MaskFromCount(int count)
         {
-            return ((uint)1 << count) - 1;
+            if (count < AccumulatorSize)
+            {
+                return ((uint)1 << count) - 1;
+            }
+            else
+            {
+                return MaxFilter;
+            }
         }
 
         void WriteOctet(byte v)
